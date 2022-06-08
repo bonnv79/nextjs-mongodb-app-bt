@@ -23,7 +23,7 @@ export async function findPostById(db, id) {
   return posts[0];
 }
 
-export async function findPosts(db, before, by, limit = 10) {
+export async function findPosts(db, before, by, limit = 10, published = null) {
   return db
     .collection('posts')
     .aggregate([
@@ -31,6 +31,7 @@ export async function findPosts(db, before, by, limit = 10) {
         $match: {
           ...(by && { creatorId: new ObjectId(by) }),
           ...(before && { createdAt: { $lt: before } }),
+          ...(published !== null && { published: published === 'true' }),
         },
       },
       { $sort: { _id: -1 } },
@@ -49,13 +50,44 @@ export async function findPosts(db, before, by, limit = 10) {
     .toArray();
 }
 
-export async function insertPost(db, { content, creatorId }) {
+export async function insertPost(db, { title, content, creatorId }) {
+  const createTime = new Date();
   const post = {
+    title,
     content,
     creatorId,
-    createdAt: new Date(),
+    createdAt: createTime,
+    updateAt: createTime,
   };
   const { insertedId } = await db.collection('posts').insertOne(post);
   post._id = insertedId;
   return post;
+}
+
+export async function deletePost(db, { id }) {
+  const postRes = await db.collection('posts').deleteOne({ _id: new ObjectId(id) });
+  const commentRes = await db.collection('comments').deleteMany({ postId: new ObjectId(id) });
+  return {
+    post: postRes,
+    comment: commentRes
+  };
+}
+
+export async function putPost(db, { id, title, content, published }) {
+  const newPost = { updateAt: new Date() };
+  if (title) {
+    newPost.title = title;
+  }
+  if (content) {
+    newPost.content = content;
+  }
+
+  if (typeof published === 'boolean') {
+    newPost.published = published;
+  }
+  const newValues = {
+    $set: newPost
+  };
+  const res = await db.collection('posts').updateOne({ _id: new ObjectId(id) }, newValues);
+  return res;
 }
