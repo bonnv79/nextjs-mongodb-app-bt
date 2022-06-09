@@ -8,3 +8,6 @@
 - new-feature: add function published and delete post
 - new-feature: add function update post, blog page, set permission
 - fix-bug: Can not resolve @/constants/permission in page-components/Post
+
+##### Release date: 9/6/2022
+- new-feature: add permission function

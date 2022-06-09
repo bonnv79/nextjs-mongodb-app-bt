@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { Input, Textarea } from '@/components/Input';
 import { Container, Spacer } from '@/components/Layout';
 import Wrapper from '@/components/Layout/Wrapper';
+import { Result } from '@/components/Result';
 import { fetcher } from '@/lib/fetch';
 import { useCurrentUser } from '@/lib/user';
 import { useRouter } from 'next/router';
@@ -198,12 +199,18 @@ const AboutYou = ({ user, mutate }) => {
 export const Settings = () => {
   const { data, error, mutate } = useCurrentUser();
   const router = useRouter();
+
   useEffect(() => {
     if (!data && !error) return;
     if (!data.user) {
       router.replace('/login');
     }
   }, [router, data, error]);
+
+  if (!data?.user) {
+    return <Result code={403} />
+  }
+
   return (
     <Wrapper className={styles.wrapper}>
       <Spacer size={2} axis="vertical" />

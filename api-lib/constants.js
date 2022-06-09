@@ -13,6 +13,7 @@ export const ValidateProps = {
     published: { type: 'boolean' },
   },
   comment: {
+    id: { type: 'string', minLength: 1, maxLength: 280 },
     content: { type: 'string', minLength: 1, maxLength: 1000 },
   },
 };

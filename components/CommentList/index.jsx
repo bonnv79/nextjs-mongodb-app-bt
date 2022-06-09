@@ -5,8 +5,8 @@ import { Text } from '@/components/Text';
 import { useCommentPages } from '@/lib/comment';
 import styles from './CommentList.module.css';
 
-const CommentList = ({ post }) => {
-  const { data, size, setSize, isLoadingMore, isReachingEnd } = useCommentPages(
+const CommentList = ({ post, isDelete = false, user }) => {
+  const { data, size, setSize, isLoadingMore, isReachingEnd, mutate } = useCommentPages(
     { postId: post._id }
   );
 
@@ -19,7 +19,7 @@ const CommentList = ({ post }) => {
       <Spacer axis="vertical" size={1} />
       {comments.map((comment) => (
         <div key={comment._id} className={styles.wrap}>
-          <Comment className={styles.comment} comment={comment} />
+          <Comment mutate={mutate} post={post} className={styles.comment} comment={comment} isDelete={isDelete} user={user} />
         </div>
       ))}
       <Container justifyContent="center">

@@ -1,5 +1,6 @@
 import { ButtonLink } from '@/components/Button';
 import { Container, Spacer, Wrapper } from '@/components/Layout';
+import { ROUTER_PATH } from 'constants/routerPath';
 import Link from 'next/link';
 import styles from './Hero.module.css';
 
@@ -14,8 +15,8 @@ const Hero = () => {
         </h1>
         <Container justifyContent="center" className={styles.buttons}>
           <Container>
-            <Link passHref href="/blog">
-              <ButtonLink className={styles.button}>Explore Blog</ButtonLink>
+            <Link passHref href={ROUTER_PATH.NEWS}>
+              <ButtonLink className={styles.button}>Explore News</ButtonLink>
             </Link>
           </Container>
           <Spacer axis="horizontal" size={1} />

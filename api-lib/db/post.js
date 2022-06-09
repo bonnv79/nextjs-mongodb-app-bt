@@ -2,25 +2,29 @@ import { ObjectId } from 'mongodb';
 import { dbProjectionUsers } from './user';
 
 export async function findPostById(db, id) {
-  const posts = await db
-    .collection('posts')
-    .aggregate([
-      { $match: { _id: new ObjectId(id) } },
-      { $limit: 1 },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'creatorId',
-          foreignField: '_id',
-          as: 'creator',
+  try {
+    const posts = await db
+      .collection('posts')
+      .aggregate([
+        { $match: { _id: new ObjectId(id) } },
+        { $limit: 1 },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'creatorId',
+            foreignField: '_id',
+            as: 'creator',
+          },
         },
-      },
-      { $unwind: '$creator' },
-      { $project: dbProjectionUsers('creator.') },
-    ])
-    .toArray();
-  if (!posts[0]) return null;
-  return posts[0];
+        { $unwind: '$creator' },
+        { $project: dbProjectionUsers('creator.') },
+      ])
+      .toArray();
+    if (!posts[0]) return null;
+    return posts[0];
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function findPosts(db, before, by, limit = 10, published = null) {

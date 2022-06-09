@@ -130,7 +130,7 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
 
         {
           isEdit && (
-            <Button type="text" shape='circle' icon={<EditOutlined />} className={styles.closeBtn} onClick={handleEdit} />
+            <Button type="text" shape='circle' icon={<EditOutlined />} className={styles.editBtn} onClick={handleEdit} />
           )
         }
 
