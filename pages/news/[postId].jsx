@@ -1,28 +1,27 @@
 import { findPostById } from '@/api-lib/db';
 import { database } from '@/api-lib/middlewares';
-import { UserPost } from '@/page-components/UserPost';
+import { UserPost } from '@/page-components/NewsPost';
 import nc from 'next-connect';
 import Head from 'next/head';
 import { Result } from '@/components/Result';
-import { useCurrentUser } from '@/lib/user';
 
-export default function UserPostPage({ post }) {
-  const { data } = useCurrentUser();
+export default function UserPostPage({ post, notFound }) {
 
-  if (!data?.user) {
+  if (notFound) {
     return (
-      <Result code={403} />
+      <Result code={404} />
     )
   }
 
   if (typeof post.createdAt !== 'string') {
     post.createdAt = new Date(post.createdAt);
   }
+
   return (
     <>
       <Head>
         <title>
-          {post.creator.name} ({post.creator.username}): {post.content}
+          {post.title}
         </title>
       </Head>
       <UserPost post={post} />
@@ -37,20 +36,12 @@ export async function getServerSideProps(context) {
 
   if (!post) {
     return {
-      notFound: true,
+      props: {
+        notFound: true,
+      }
     };
   }
 
-  if (context.params.username !== post.creator.username) {
-    // mismatch params in url, redirect to correct one
-    // eg. post x belongs to user a, but url is /user/b/post/x
-    return {
-      redirect: {
-        destination: `/user/${post.creator.username}/post/${post._id}`,
-        permanent: false,
-      },
-    };
-  }
   post._id = String(post._id);
   post.creatorId = String(post.creatorId);
   post.creator._id = String(post.creator._id);

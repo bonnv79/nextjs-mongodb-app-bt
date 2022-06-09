@@ -3,6 +3,7 @@ import { Button, ButtonLink } from '@/components/Button';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { fetcher } from '@/lib/fetch';
 import { useCurrentUser } from '@/lib/user';
+import { ROUTER_PATH } from 'constants/routerPath';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -74,13 +75,13 @@ const UserMenu = ({ user, mutate }) => {
             <Link passHref href={`/user/${user.username}`}>
               <a className={styles.item}>Profile</a>
             </Link>
-            <Link passHref href="/settings">
+            <Link passHref href={ROUTER_PATH.SETTING}>
               <a className={styles.item}>Settings</a>
             </Link>
-            <Link passHref href="/blog">
-              <a className={styles.item}>Blog</a>
+            <Link passHref href={ROUTER_PATH.NEWS}>
+              <a className={styles.item}>News</a>
             </Link>
-            <Link passHref href="/post">
+            <Link passHref href={ROUTER_PATH.POST}>
               <a className={styles.item}>Manage Posts</a>
             </Link>
             <div className={styles.item} style={{ cursor: 'auto' }}>

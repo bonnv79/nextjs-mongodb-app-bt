@@ -62,3 +62,15 @@
   margin: 0;
   color: var(--accents-5);
 }
+
+.closeBtn {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+}
+
+.editBtn {
+  position: absolute;
+  right: 30px;
+  top: 3px;
+}

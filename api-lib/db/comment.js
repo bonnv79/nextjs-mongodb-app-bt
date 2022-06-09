@@ -28,13 +28,32 @@ export async function findComments(db, postId, before, limit = 10) {
 }
 
 export async function insertComment(db, postId, { content, creatorId }) {
+  const timeDate = new Date();
   const comment = {
     content,
     postId: new ObjectId(postId),
     creatorId,
-    createdAt: new Date(),
+    createdAt: timeDate,
+    updatedAt: timeDate,
   };
   const { insertedId } = await db.collection('comments').insertOne(comment);
   comment._id = insertedId;
   return comment;
+}
+
+export async function deleteComment(db, { id }) {
+  const res = await db.collection('comments').deleteOne({ _id: new ObjectId(id) });
+  return res;
+}
+
+export async function putComment(db, { id, content }) {
+  const newData = { updatedAt: new Date() };
+  if (content) {
+    newData.content = content;
+  }
+  const newValues = {
+    $set: newData
+  };
+  const res = await db.collection('comments').updateOne({ _id: new ObjectId(id) }, newValues);
+  return res;
 }

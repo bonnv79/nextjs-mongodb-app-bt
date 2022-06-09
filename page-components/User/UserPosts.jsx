@@ -22,7 +22,8 @@ const UserPosts = ({ user }) => {
         {posts.map((post) => (
           <Link
             key={post._id}
-            href={`/user/${post.creator.username}/post/${post._id}`}
+            // href={`/user/${post.creator.username}/post/${post._id}`}
+            href={`/news/${post._id}`}
           >
             <a className={styles.wrap}>
               <Post className={styles.post} post={post} />
