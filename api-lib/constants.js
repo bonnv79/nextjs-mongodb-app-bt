@@ -9,11 +9,11 @@ export const ValidateProps = {
   post: {
     id: { type: 'string', minLength: 1, maxLength: 280 },
     title: { type: 'string', minLength: 1, maxLength: 280 },
-    content: { type: 'string', minLength: 1, maxLength: 1000 },
+    content: { type: 'string', minLength: 1 },
     published: { type: 'boolean' },
   },
   comment: {
     id: { type: 'string', minLength: 1, maxLength: 280 },
-    content: { type: 'string', minLength: 1, maxLength: 1000 },
+    content: { type: 'string', minLength: 1 },
   },
 };
