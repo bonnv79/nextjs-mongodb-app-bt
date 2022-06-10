@@ -9,7 +9,7 @@ import styles from './UserPosts.module.css';
 
 const UserPosts = ({ user }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd } = usePostPages({
-    creatorId: user._id,
+    creatorId: user._id, published: true
   });
   const posts = data
     ? data.reduce((acc, val) => [...acc, ...val.posts], [])

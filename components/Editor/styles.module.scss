@@ -10,5 +10,9 @@
     .ql-container {
       border-radius: 0 0 5px 5px;
     }
+
+    .ql-editor>* {
+      color: var(--foreground);
+    }
   }
 }

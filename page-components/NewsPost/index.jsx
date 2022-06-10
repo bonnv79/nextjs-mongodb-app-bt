@@ -9,7 +9,7 @@ import CommentList from 'components/CommentList';
 import styles from './UserPost.module.css';
 import { Post } from '@/components/Post';
 
-export const UserPost = ({ post = {} }) => {
+export const NewsPost = ({ post = {} }) => {
   const { data } = useCurrentUser();
   const isEdit = checkPermission(data, PERMISSION.POST.POST_EDIT);
   return (
@@ -20,7 +20,7 @@ export const UserPost = ({ post = {} }) => {
       }}
       avatar={undefined}
     >
-      <Post post={post} isEdit={isEdit} detailMode />
+      <Post post={post} isEdit={isEdit} detailMode hideTitle />
       <Spacer axis="vertical" size={1} />
 
       <h3 className={styles.subtitle}>Comments</h3>

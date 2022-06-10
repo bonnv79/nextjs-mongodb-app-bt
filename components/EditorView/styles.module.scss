@@ -3,5 +3,13 @@
     .ql-hidden {
       display: none !important;
     }
+
+    .ql-editor {
+      padding: 0;
+
+      &>* {
+        color: var(--foreground);
+      }
+    }
   }
 }

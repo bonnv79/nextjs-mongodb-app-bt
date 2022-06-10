@@ -1,6 +1,6 @@
 import { findPostById } from '@/api-lib/db';
 import { database } from '@/api-lib/middlewares';
-import { UserPost } from '@/page-components/NewsPost';
+import { NewsPost } from '@/page-components/NewsPost';
 import nc from 'next-connect';
 import Head from 'next/head';
 import { Result } from '@/components/Result';
@@ -24,7 +24,7 @@ export default function UserPostPage({ post, notFound }) {
           {post.title}
         </title>
       </Head>
-      <UserPost post={post} />
+      <NewsPost post={post} />
     </>
   );
 }
