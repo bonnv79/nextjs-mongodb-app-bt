@@ -3,11 +3,11 @@ import toast from 'react-hot-toast';
 import { useState, useCallback } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
+import { Editor } from '@/components/Editor';
 
-const { TextArea } = Input;
-
-const PosterInner = ({ user = {}, post = {}, save = () => { }, cancel = () => { } }) => {
+const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [content, setContent] = useState(post.content);
   const [form] = Form.useForm();
   const editMode = post._id;
 
@@ -28,7 +28,6 @@ const PosterInner = ({ user = {}, post = {}, save = () => { }, cancel = () => { 
         form.resetFields();
         // refresh post lists
         mutate();
-        save();
       } catch (e) {
         toast.error(e.message);
       } finally {
@@ -46,7 +45,7 @@ const PosterInner = ({ user = {}, post = {}, save = () => { }, cancel = () => { 
     <Form
       name="add-post-form"
       initialValues={{ remember: true }}
-      onFinish={onFinish}
+      onFinish={typeof save === 'function' ? save : onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       layout='vertical'
@@ -65,7 +64,7 @@ const PosterInner = ({ user = {}, post = {}, save = () => { }, cancel = () => { 
         rules={[{ required: true, message: 'Please input post\'s content!' }]}
         initialValue={post.content}
       >
-        <TextArea rows={5} placeholder={`What's on your post content, ${user.name}?`} />
+        <Editor value={content} onChange={setContent} />
       </Form.Item>
 
       <Form.Item style={{ textAlign: 'center', margin: 0 }}>

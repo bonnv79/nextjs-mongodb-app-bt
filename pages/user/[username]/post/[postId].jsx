@@ -18,11 +18,12 @@ export default function UserPostPage({ post }) {
   if (typeof post.createdAt !== 'string') {
     post.createdAt = new Date(post.createdAt);
   }
+
   return (
     <>
       <Head>
         <title>
-          {post.creator.name} ({post.creator.username}): {post.content}
+          Post Detail
         </title>
       </Head>
       <UserPost post={post} />

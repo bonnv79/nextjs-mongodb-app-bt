@@ -38,7 +38,7 @@ export async function findPosts(db, before, by, limit = 10, published = null) {
           ...(published !== null && { published: published === 'true' }),
         },
       },
-      { $sort: { _id: -1 } },
+      { $sort: { _id: -1 } }, //  updateAt: -1
       { $limit: limit },
       {
         $lookup: {
@@ -93,5 +93,5 @@ export async function putPost(db, { id, title, content, published }) {
     $set: newPost
   };
   const res = await db.collection('posts').updateOne({ _id: new ObjectId(id) }, newValues);
-  return res;
+  return res ? newPost : res;
 }
