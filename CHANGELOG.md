@@ -11,3 +11,6 @@
 
 ##### Release date: 9/6/2022
 - new-feature: add permission function
+
+##### Release date: 10/6/2022
+- improvement: modify post

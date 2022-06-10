@@ -22,7 +22,7 @@ const PostList = () => {
           passHref
         >
           <div className={styles.wrap}>
-            <Post className={styles.post} post={post} detailMode />
+            <Post className={styles.post} post={post} />
           </div>
         </Link>
       ))}

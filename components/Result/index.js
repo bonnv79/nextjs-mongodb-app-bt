@@ -24,7 +24,7 @@ export const Result = ({ code, ...props }) => {
   return (
     <AntResult
       extra={(
-        <Link href={ROUTER_PATH.HOME}>
+        <Link href={ROUTER_PATH.HOME} passHref>
           <Button type="primary">Back Home</Button>
         </Link>
       )}

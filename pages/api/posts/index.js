@@ -94,7 +94,7 @@ handler.put(
       published: req.body.published,
     });
 
-    return res.json({ ...result, id: req.body.id });
+    return res.json(result);
   }
 );
 

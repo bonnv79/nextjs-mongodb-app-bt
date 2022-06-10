@@ -2,7 +2,7 @@ import { Avatar } from '@/components/Avatar';
 import { Container } from '@/components/Layout';
 import { CloseOutlined, CloseSquareOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { format } from '@lukeed/ms';
-import { Button, Input, Space } from 'antd';
+import { Button, Input, Space, Spin } from 'antd';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useCallback, useState, useMemo } from 'react';
@@ -45,7 +45,7 @@ const Comment = ({ mutate = () => { }, comment, className, isDelete = false, use
         setIsLoading(false);
       }
     },
-    [mutate]
+    [mutate, comment._id]
   );
 
   const handleSave = async (e) => {
@@ -76,57 +76,59 @@ const Comment = ({ mutate = () => { }, comment, className, isDelete = false, use
   }
 
   return (
-    <div className={clsx(styles.root, className)}>
-      <Link href={`/user/${comment.creator.username}`}>
-        <a>
-          <Container className={styles.creator}>
-            <Avatar
-              size={36}
-              url={comment.creator.profilePicture}
-              username={comment.creator.username}
-            />
-            <Container column className={styles.meta}>
-              <p className={styles.name}>{comment.creator.name}</p>
-              <p className={styles.username}>{comment.creator.username}</p>
+    <Spin spinning={isLoading}>
+      <div className={clsx(styles.root, className)}>
+        <Link href={`/user/${comment.creator.username}`}>
+          <a>
+            <Container className={styles.creator}>
+              <Avatar
+                size={36}
+                url={comment.creator.profilePicture}
+                username={comment.creator.username}
+              />
+              <Container column className={styles.meta}>
+                <p className={styles.name}>{comment.creator.name}</p>
+                <p className={styles.username}>{comment.creator.username}</p>
+              </Container>
             </Container>
-          </Container>
-        </a>
-      </Link>
-      <div className={styles.wrap}>
+          </a>
+        </Link>
+        <div className={styles.wrap}>
+          {
+            editMode ? (
+              <TextArea rows={4} value={content} onChange={e => setContent(e.target.value)} />
+            ) : (
+              <p className={styles.content}>{comment.content}</p>
+            )
+          }
+          {
+            editMode && (
+              <Space style={{ marginTop: 8 }}>
+                <Button loading={editing} size="small" type="text" shape='round' icon={<SaveOutlined />} onClick={handleSave}>Save</Button>
+                <Button loading={editing} size="small" type="text" shape='round' icon={<CloseSquareOutlined />} onClick={handleCancel}>Cancel</Button>
+              </Space>
+            )
+          }
+        </div>
+        <div className={styles.wrap}>
+          <time dateTime={String(comment.createdAt)} className={styles.timestamp}>
+            {timestampTxt}
+          </time>
+        </div>
+
         {
-          editMode ? (
-            <TextArea rows={4} value={content} onChange={e => setContent(e.target.value)} />
-          ) : (
-            <p className={styles.content}>{comment.content}</p>
+          (isDelete || ownerComment) && (
+            <Button type="text" shape='circle' icon={<CloseOutlined />} className={styles.closeBtn} onClick={handleDelete} />
           )
         }
+
         {
-          editMode && (
-            <Space style={{ marginTop: 8 }}>
-              <Button loading={editing} size="small" type="text" shape='round' icon={<SaveOutlined />} onClick={handleSave}>Save</Button>
-              <Button loading={editing} size="small" type="text" shape='round' icon={<CloseSquareOutlined />} onClick={handleCancel}>Cancel</Button>
-            </Space>
+          (ownerComment) && (
+            <Button type="text" shape='circle' icon={<EditOutlined />} className={styles.editBtn} onClick={handleEdit} />
           )
         }
       </div>
-      <div className={styles.wrap}>
-        <time dateTime={String(comment.createdAt)} className={styles.timestamp}>
-          {timestampTxt}
-        </time>
-      </div>
-
-      {
-        (isDelete || ownerComment) && (
-          <Button type="text" shape='circle' loading={isLoading} icon={<CloseOutlined />} className={styles.closeBtn} onClick={handleDelete} />
-        )
-      }
-
-      {
-        (ownerComment) && (
-          <Button type="text" shape='circle' icon={<EditOutlined />} className={styles.editBtn} onClick={handleEdit} />
-        )
-      }
-    </div>
+    </Spin>
   );
 };
 

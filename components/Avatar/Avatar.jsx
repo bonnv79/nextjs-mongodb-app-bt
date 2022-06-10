@@ -1,5 +1,6 @@
 import styles from './Avatar.module.css';
 
+/* eslint-disable @next/next/no-img-element */
 const Avatar = ({ style, size, username, url }) => {
   return (
     <img

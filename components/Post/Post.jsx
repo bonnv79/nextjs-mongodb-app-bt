@@ -1,32 +1,28 @@
 import { Avatar } from '@/components/Avatar';
 import { Container } from '@/components/Layout';
-import { format } from '@lukeed/ms';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import styles from './Post.module.css';
-import { CheckCircleOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseOutlined, EditOutlined, StopOutlined } from '@ant-design/icons';
 import { useCallback } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
-import { Button, Spin, Typography } from 'antd';
+import { Button, Spin, Tooltip, Typography } from 'antd';
 import PosterInner from '@/page-components/Post/PosterInner';
-import { useRouter } from 'next/router'
+import { EditorView } from '../EditorView';
+import { getTimestamp, StripHTMLTags } from 'utils';
 
 const { Paragraph } = Typography;
 
-const Post = ({ post, className, isDelete = false, isPublished = false, isEdit = false }) => {
+const Post = ({ post: initPost, className, isDelete = false, isPublished = false, isEdit = false, detailMode = false }) => {
+  const [post, setPost] = useState(initPost);
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const { mutate } = usePostPages();
-  const router = useRouter();
 
-  const timestampTxt = useMemo(() => {
-    const diff = Date.now() - new Date(post.createdAt).getTime();
-    if (diff < 1 * 60 * 1000) return 'Just now';
-    return `${format(diff, true)} ago`;
-  }, [post.createdAt]);
+  const timestampTxt = getTimestamp(post.createdAt);
 
   const handleDelete = useCallback(
     async (e) => {
@@ -53,7 +49,7 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
         setIsLoading(false);
       }
     },
-    [mutate]
+    [mutate, post._id]
   );
 
   const handlePublic = async (e) => {
@@ -61,13 +57,14 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
     try {
       const requestBody = { id: post._id, published: !post.published };
       setIsLoading(true);
-      await fetcher('/api/posts', {
+      const res = await fetcher('/api/posts', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
       });
       toast.success('You have published successfully');
-      mutate();
+
+      setPost({ ...post, ...res });
     } catch (e) {
       toast.error(e.message);
     } finally {
@@ -75,19 +72,36 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
     }
   }
 
-  const handleEdit = () => {
+  const handleEdit = (e) => {
+    e.preventDefault();
     setEditMode(!editMode);
   }
 
-  const handleSave = () => {
-    router.reload();
-  }
+  const handleSave = async (values) => {
+    try {
+      setIsLoading(true);
+      const res = await fetcher('/api/posts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, id: post._id }),
+      });
+      toast.success('You have saved successfully');
+
+      setPost({ ...post, ...res });
+      setEditMode(false);
+      mutate();
+    } catch (e) {
+      toast.error(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Spin spinning={isLoading} tip="Loading...">
       <div className={clsx(styles.root, className)}>
         <div className={styles.header}>
-          <Link href={`/user/${post.creator.username}`}>
+          <Link href={`/user/${post.creator.username}`} passHref>
             <div>
               <Container className={styles.creator}>
                 <Avatar
@@ -110,13 +124,24 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
           ) : (
             <>
               <Paragraph className={styles.title} ellipsis={!isEdit}>
-                {post.published && (
-                  <CheckCircleOutlined style={{ color: 'blue', marginRight: 8 }} />
-                )}
                 {post.title}
               </Paragraph>
               <div className={styles.wrap}>
-                <Paragraph ellipsis={!isEdit} className={styles.content}>{post.content}</Paragraph>
+                {
+                  detailMode ? (
+                    <EditorView>
+                      {post.content}
+                    </EditorView>
+                  ) : (
+                    <>
+                      <Paragraph
+                        ellipsis
+                        className={styles.content}>
+                        {StripHTMLTags(post.content)}
+                      </Paragraph>
+                    </>
+                  )
+                }
               </div>
             </>
           )
@@ -128,25 +153,62 @@ const Post = ({ post, className, isDelete = false, isPublished = false, isEdit =
           </time>
         </div>
 
-        {
-          isEdit && (
-            <Button type="text" shape='circle' icon={<EditOutlined />} className={styles.editBtn} onClick={handleEdit} />
-          )
-        }
+        <div className={styles.action}>
+          {
+            (isPublished || isEdit) && (
+              <Button
+                type="text"
+                shape='circle'
+                icon={post.published ? (
+                  <Tooltip title="Published" color="green">
+                    <CheckCircleOutlined style={{ color: '#52c41a' }} />
+                  </Tooltip>
 
-        {
-          isDelete && (
-            <Button type="text" shape='circle' icon={<CloseOutlined />} className={styles.closeBtn} onClick={handleDelete} />
-          )
-        }
+                ) : (
+                  <Tooltip title="Unpublished" color="gold">
+                    <StopOutlined style={{ color: '#faad14' }} />
+                  </Tooltip>
+                )}
+                className={styles.publicBtn}
+                loading={isLoading}
+                onClick={handlePublic}
+              />
+            )
+          }
+          {
+            isEdit && (
+              <Button
+                title="Edit"
+                type="text"
+                shape='circle'
+                icon={(
+                  <Tooltip title="Edit">
+                    <EditOutlined />
+                  </Tooltip>
+                )}
+                className={styles.editBtn}
+                onClick={handleEdit}
+              />
+            )
+          }
 
-        {
-          isPublished && (
-            <Button type="primary" className={styles.publicBtn} size="small" shape="round" loading={isLoading} onClick={handlePublic}>
-              {post.published ? 'Undisclosed' : 'Public'}
-            </Button>
-          )
-        }
+          {
+            isDelete && (
+              <Button
+                title="Delete"
+                type="text"
+                shape='circle'
+                icon={(
+                  <Tooltip title="Delete">
+                    <CloseOutlined />
+                  </Tooltip>
+                )}
+                className={styles.closeBtn}
+                onClick={handleDelete}
+              />
+            )
+          }
+        </div>
       </div>
     </Spin>
   );

@@ -17,13 +17,12 @@ export const UserPost = ({ post = {} }) => {
 
   return (
     <PageHeader
-      title={post.title}
       breadcrumb={{
         routes: BREADCRUMB_ROUTES.POST_DETAIL
       }}
       avatar={undefined}
     >
-      <Post post={post} isEdit={isEdit || ownerPost} />
+      <Post post={post} isEdit={isEdit || ownerPost} detailMode />
       <Spacer axis="vertical" size={1} />
 
       <h3 className={styles.subtitle}>Comments</h3>
