@@ -6,7 +6,7 @@ export const checkPermission = (data, role) => {
 }
 
 export const StripHTMLTags = (value) => {
-  return `${value}`.replace(/(<([^>]+)>)/gi, "")
+  return `${value}`.replace(/(<([^>]+)>)/gi, '').replace(/&nbsp;/gi, ' ')
 }
 
 export const getTimestamp = (value) => {
