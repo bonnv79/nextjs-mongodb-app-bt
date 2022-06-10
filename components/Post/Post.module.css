@@ -51,10 +51,12 @@
   font-size: 1.1em;
   font-weight: bold;
   margin: 0 !important;
+  color: var(--foreground);
 }
 
 .wrap {
   margin-top: 16px;
+  color: var(--foreground);
 }
 
 .content {
@@ -76,8 +78,12 @@
   top: 3px;
 }
 
-.closeBtn {}
+.closeBtn {
+  color: var(--foreground);
+}
 
-.editBtn {}
+.editBtn {
+  color: var(--foreground);
+}
 
 .publicBtn {}

@@ -16,7 +16,15 @@ import { getTimestamp, StripHTMLTags } from 'utils';
 
 const { Paragraph } = Typography;
 
-const Post = ({ post: initPost, className, isDelete = false, isPublished = false, isEdit = false, detailMode = false }) => {
+const Post = ({
+  post: initPost,
+  className,
+  isDelete = false,
+  isPublished = false,
+  isEdit = false,
+  detailMode = false,
+  hideTitle = false
+}) => {
   const [post, setPost] = useState(initPost);
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -123,7 +131,7 @@ const Post = ({ post: initPost, className, isDelete = false, isPublished = false
             <PosterInner post={post} save={handleSave} cancel={() => setEditMode(false)} />
           ) : (
             <>
-              <Paragraph className={styles.title} ellipsis={!isEdit}>
+              <Paragraph style={{ display: hideTitle ? 'none' : undefined }} className={styles.title} ellipsis={!isEdit}>
                 {post.title}
               </Paragraph>
               <div className={styles.wrap}>
