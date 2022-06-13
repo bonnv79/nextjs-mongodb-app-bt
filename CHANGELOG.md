@@ -19,3 +19,4 @@
 
 ##### Release date: 13/6/2022
 - improvement: Add img for post
+- fix-bug: fix img size

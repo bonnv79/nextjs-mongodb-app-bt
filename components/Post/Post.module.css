@@ -93,8 +93,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .img {
   object-fit: contain;
+  border-radius: 8px;
 }

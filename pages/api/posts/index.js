@@ -5,6 +5,7 @@ import { ncOpts } from '@/api-lib/nc';
 import nc from 'next-connect';
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
+import { IMG_CONFIG } from 'constants';
 
 const upload = multer({ dest: '/tmp' });
 
@@ -57,11 +58,7 @@ handler.post(
 
     let img;
     if (req.file) {
-      const image = await cloudinary.uploader.upload(req.file.path, {
-        width: 512,
-        height: 512,
-        crop: 'fill',
-      });
+      const image = await cloudinary.uploader.upload(req.file.path, IMG_CONFIG);
       img = image.secure_url;
     }
 
@@ -121,11 +118,7 @@ handler.put(
 
     let img;
     if (req.file) {
-      const image = await cloudinary.uploader.upload(req.file.path, {
-        width: 512,
-        height: 512,
-        crop: 'fill',
-      });
+      const image = await cloudinary.uploader.upload(req.file.path, IMG_CONFIG);
       img = image.secure_url;
     }
 
