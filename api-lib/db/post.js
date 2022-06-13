@@ -54,7 +54,7 @@ export async function findPosts(db, before, by, limit = 10, published = null) {
     .toArray();
 }
 
-export async function insertPost(db, { title, content, creatorId }) {
+export async function insertPost(db, { title, content, creatorId, img }) {
   const createTime = new Date();
   const post = {
     title,
@@ -62,6 +62,7 @@ export async function insertPost(db, { title, content, creatorId }) {
     creatorId,
     createdAt: createTime,
     updateAt: createTime,
+    img
   };
   const { insertedId } = await db.collection('posts').insertOne(post);
   post._id = insertedId;
@@ -77,11 +78,12 @@ export async function deletePost(db, { id }) {
   };
 }
 
-export async function putPost(db, { id, title, content, published }) {
+export async function putPost(db, { id, title, content, published, img }) {
   const newPost = { updateAt: new Date() };
   if (title) {
     newPost.title = title;
   }
+
   if (content) {
     newPost.content = content;
   }
@@ -89,6 +91,11 @@ export async function putPost(db, { id, title, content, published }) {
   if (typeof published === 'boolean') {
     newPost.published = published;
   }
+
+  if (img) {
+    newPost.img = img;
+  }
+
   const newValues = {
     $set: newPost
   };

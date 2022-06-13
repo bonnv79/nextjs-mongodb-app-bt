@@ -16,3 +16,6 @@
 - improvement: modify post
 - improvement: modify post css, update user page
 - improvement: remove maxLength of post content and comment content
+
+##### Release date: 13/6/2022
+- improvement: Add img for post

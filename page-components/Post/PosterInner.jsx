@@ -1,15 +1,20 @@
 import { Button, Form, Input, Space } from 'antd';
 import toast from 'react-hot-toast';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import { Editor } from '@/components/Editor';
+import styles from './PosterInner.module.css';
+import { DEFAULT_UPLOAD } from 'constants';
+import { Img } from '@/components/Img';
 
 const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState(post.content);
   const [form] = Form.useForm();
   const editMode = post._id;
+  const profilePictureRef = useRef();
+  const [avatarHref, setAvatarHref] = useState(post.img);
 
   const { mutate } = usePostPages();
 
@@ -17,15 +22,29 @@ const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
     async (values) => {
       try {
         setIsLoading(true);
-        const requestBody = editMode ? { ...values, id: post._id } : values;
+        // const requestBody = editMode ? { ...values, id: post._id } : values;
         const msg = editMode ? 'You have saved successfully' : 'You have posted successfully';
+
+        const formData = new FormData();
+        if (editMode) {
+          formData.append('id', post._id);
+        }
+        formData.append('title', values?.title);
+        formData.append('content', values?.content);
+
+        if (profilePictureRef?.current?.files[0]) {
+          formData.append('img', profilePictureRef?.current?.files[0]);
+        }
+
         await fetcher('/api/posts', {
           method: editMode ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody),
+          body: formData,
+          // headers: { 'Content-Type': 'application/json' },
+          // body: JSON.stringify(requestBody),
         });
         toast.success(msg);
         form.resetFields();
+        setAvatarHref();
         // refresh post lists
         mutate();
       } catch (e) {
@@ -41,16 +60,53 @@ const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
     console.log('Failed:', errorInfo);
   };
 
+  const onAvatarChange = useCallback((e) => {
+    const file = e.currentTarget.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (l) => {
+      setAvatarHref(l.currentTarget.result);
+    };
+    reader.readAsDataURL(file);
+  }, []);
+
+  const handleSave = (values) => {
+    save({
+      ...values,
+      img: profilePictureRef?.current?.files[0],
+      id: post._id
+    });
+  }
+
   return (
     <Form
       name="add-post-form"
       initialValues={{ remember: true }}
-      onFinish={typeof save === 'function' ? save : onFinish}
+      onFinish={typeof save === 'function' ? handleSave : onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       layout='vertical'
       form={form}
     >
+      <div className={styles.imgRoot}>
+        <div className={styles.imgContainer}>
+          <input
+            className={styles.imgInput}
+            aria-label="post-image"
+            type="file"
+            accept="image/*"
+            ref={profilePictureRef}
+            onChange={onAvatarChange}
+          />
+          <Img
+            className={styles.img}
+            src={avatarHref || DEFAULT_UPLOAD}
+            alt={post.title}
+            height={250}
+          />
+        </div>
+      </div>
+
       <Form.Item
         name="title"
         rules={[{ required: true, message: 'Please input post\'s title!' }]}
