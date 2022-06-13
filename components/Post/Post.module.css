@@ -52,6 +52,7 @@
   font-weight: bold;
   margin: 0 !important;
   color: var(--foreground);
+  font-size: 2rem;
 }
 
 .wrap {
@@ -87,3 +88,13 @@
 }
 
 .publicBtn {}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img {
+  object-fit: contain;
+}

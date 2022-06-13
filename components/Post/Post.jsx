@@ -9,10 +9,12 @@ import { useCallback } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
-import { Button, Spin, Tooltip, Typography } from 'antd';
+import { Button, Col, Row, Spin, Tooltip, Typography } from 'antd';
 import PosterInner from '@/page-components/Post/PosterInner';
 import { EditorView } from '../EditorView';
 import { getTimestamp, StripHTMLTags } from 'utils';
+import { DEFAULT_POST } from 'constants';
+import { Img } from '../Img';
 
 const { Paragraph } = Typography;
 
@@ -37,10 +39,14 @@ const Post = ({
       e.preventDefault();
       try {
         setIsLoading(true);
+        const formData = new FormData();
+        formData.append('id', post._id);
+
         const res = await fetcher('/api/posts', {
           method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: post._id }),
+          body: formData,
+          // headers: { 'Content-Type': 'application/json' },
+          // body: JSON.stringify({ id: post._id }),
         });
 
         let msg = 'You have deleted successfully.';
@@ -63,16 +69,22 @@ const Post = ({
   const handlePublic = async (e) => {
     e.preventDefault();
     try {
-      const requestBody = { id: post._id, published: !post.published };
       setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append('id', post._id);
+      formData.append('published', !post.published);
+
       const res = await fetcher('/api/posts', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
+        body: formData,
+        // headers: { 'Content-Type': 'application/json' },
+        // body: JSON.stringify({ id: post._id, published: !post.published }),
       });
       toast.success('You have published successfully');
 
       setPost({ ...post, ...res });
+      mutate();
     } catch (e) {
       toast.error(e.message);
     } finally {
@@ -88,10 +100,18 @@ const Post = ({
   const handleSave = async (values) => {
     try {
       setIsLoading(true);
+
+      const formData = new FormData();
+      formData.append('id', values?.id);
+      formData.append('title', values?.title);
+      formData.append('content', values?.content);
+      formData.append('img', values?.img);
+
       const res = await fetcher('/api/posts', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, id: post._id }),
+        body: formData,
+        // headers: { 'Content-Type': 'application/json' },
+        // body: JSON.stringify({ ...values, id: post._id }),
       });
       toast.success('You have saved successfully');
 
@@ -104,6 +124,8 @@ const Post = ({
       setIsLoading(false);
     }
   };
+
+  const strContent = StripHTMLTags(post.content);
 
   return (
     <Spin spinning={isLoading} tip="Loading...">
@@ -130,28 +152,48 @@ const Post = ({
           editMode ? (
             <PosterInner post={post} save={handleSave} cancel={() => setEditMode(false)} />
           ) : (
-            <>
-              <Paragraph style={{ display: hideTitle ? 'none' : undefined }} className={styles.title} ellipsis={!isEdit}>
-                {post.title}
-              </Paragraph>
-              <div className={styles.wrap}>
-                {
-                  detailMode ? (
-                    <EditorView>
-                      {post.content}
-                    </EditorView>
-                  ) : (
-                    <>
-                      <Paragraph
-                        ellipsis
-                        className={styles.content}>
-                        {StripHTMLTags(post.content)}
-                      </Paragraph>
-                    </>
-                  )
-                }
-              </div>
-            </>
+            <Row gutter={[16, 16]}>
+              <Col span={detailMode ? 24 : 8} className={styles.imgContainer} >
+                <Img
+                  className={styles.img}
+                  src={post.img || DEFAULT_POST}
+                  alt={post.title}
+                  height={250}
+                />
+              </Col>
+              <Col span={detailMode ? 24 : 16} style={{ display: 'flex', alignItems: 'center' }} >
+                <div style={{ width: '100%' }}>
+                  <Paragraph
+                    style={{ display: hideTitle ? 'none' : undefined }}
+                    className={styles.title}
+                    ellipsis={detailMode ? false : {
+                      rows: 2
+                    }}
+                  >
+                    {post.title}
+                  </Paragraph>
+                  <div className={styles.wrap}>
+                    {
+                      detailMode ? (
+                        <EditorView>
+                          {post.content}
+                        </EditorView>
+                      ) : (
+                        <>
+                          <Paragraph
+                            ellipsis={{
+                              rows: 5,
+                            }}
+                            className={styles.content}>
+                            {strContent}
+                          </Paragraph>
+                        </>
+                      )
+                    }
+                  </div>
+                </div>
+              </Col>
+            </Row>
           )
         }
 

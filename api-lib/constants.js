@@ -10,7 +10,7 @@ export const ValidateProps = {
     id: { type: 'string', minLength: 1, maxLength: 280 },
     title: { type: 'string', minLength: 1, maxLength: 280 },
     content: { type: 'string', minLength: 1 },
-    published: { type: 'boolean' },
+    published: { type: 'string' },
   },
   comment: {
     id: { type: 'string', minLength: 1, maxLength: 280 },
