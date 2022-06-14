@@ -53,7 +53,7 @@ const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
         setIsLoading(false);
       }
     },
-    [mutate]
+    [mutate, editMode, post._id, form]
   );
 
   const onFinishFailed = (errorInfo) => {

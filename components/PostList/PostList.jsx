@@ -8,8 +8,28 @@ import Link from 'next/link';
 import { checkPermission } from 'utils';
 import styles from './PostList.module.css';
 
-const PostList = ({ user, isViewAllPost }) => {
-  const { data, size, setSize, isLoadingMore, isReachingEnd } = usePostPages({ creatorId: isViewAllPost ? undefined : user?._id });
+const initGetPath = (post) => (`/user/${post?.creator?.username}/post/${post?._id}`);
+
+const PostList = ({
+  user,
+  isViewAllPost,
+  searchKey,
+  published,
+  sortDate,
+  getPath = initGetPath
+}) => {
+  const {
+    data,
+    size,
+    setSize,
+    isLoadingMore,
+    isReachingEnd
+  } = usePostPages({
+    creatorId: isViewAllPost ? undefined : user?._id,
+    searchKey,
+    published,
+    sortDate
+  });
   const posts = data
     ? data.reduce((acc, val) => [...acc, ...val.posts], [])
     : [];
@@ -18,10 +38,11 @@ const PostList = ({ user, isViewAllPost }) => {
 
   return (
     <div className={styles.root}>
+      <h2>Total of {posts.length} {posts.length <= 1 ? 'post' : 'posts'}</h2>
       {posts.map((post) => (
         <Link
           key={post._id}
-          href={`/user/${post.creator.username}/post/${post._id}`}
+          href={getPath(post)}
           passHref
         >
           <div className={styles.wrap}>

@@ -27,7 +27,7 @@ export async function findPostById(db, id) {
   }
 }
 
-export async function findPosts(db, before, by, limit = 10, published = null) {
+export async function findPosts(db, before, by, limit = 10, published = null, searchKey, sortDate = -1) {
   return db
     .collection('posts')
     .aggregate([
@@ -36,9 +36,14 @@ export async function findPosts(db, before, by, limit = 10, published = null) {
           ...(by && { creatorId: new ObjectId(by) }),
           ...(before && { createdAt: { $lt: before } }),
           ...(published !== null && { published: published === 'true' }),
+          ...(searchKey && { title: { '$regex': searchKey, '$options': 'i' } }),
         },
       },
-      { $sort: { _id: -1 } }, //  updateAt: -1
+      {
+        $sort: {
+          ...(sortDate && { createdAt: Number(sortDate) })
+        }
+      }, //  updateAt: -1, _id: -1,
       { $limit: limit },
       {
         $lookup: {

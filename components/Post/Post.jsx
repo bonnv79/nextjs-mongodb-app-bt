@@ -10,7 +10,7 @@ import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
 import { Button, Col, Row, Spin, Tooltip, Typography } from 'antd';
-import PosterInner from '@/page-components/Post/PosterInner';
+import { PosterInner } from '@/components/PosterInner';
 import { EditorView } from '../EditorView';
 import { getTimestamp, StripHTMLTags } from 'utils';
 import { DEFAULT_POST } from 'constants';

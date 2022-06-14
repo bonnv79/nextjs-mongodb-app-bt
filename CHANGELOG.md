@@ -20,3 +20,6 @@
 ##### Release date: 13/6/2022
 - improvement: Add img for post
 - fix-bug: fix img size
+
+##### Release date: 14/6/2022
+- improvement: Add filter and sort for post
