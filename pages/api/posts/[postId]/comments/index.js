@@ -52,6 +52,7 @@ handler.post(
     const comment = await insertComment(req.db, post._id, {
       creatorId: req.user._id,
       content,
+      postCreatorId: post.creatorId
     });
 
     return res.json({ comment });

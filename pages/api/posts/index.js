@@ -34,6 +34,8 @@ handler.get(async (req, res) => {
     req.query.by,
     req.query.limit ? parseInt(req.query.limit, 10) : undefined,
     req.query.published,
+    req.query.searchKey,
+    req.query.sortDate,
   );
 
   res.json({ posts });

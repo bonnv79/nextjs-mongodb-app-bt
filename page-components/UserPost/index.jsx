@@ -22,7 +22,7 @@ export const UserPost = ({ post = {} }) => {
       }}
       avatar={undefined}
     >
-      <Post post={post} isEdit={isEdit || ownerPost} detailMode />
+      <Post post={post} isEdit={isEdit || ownerPost} isPublished={isEdit} detailMode />
       <Spacer axis="vertical" size={1} />
 
       <h3 className={styles.subtitle}>Comments</h3>

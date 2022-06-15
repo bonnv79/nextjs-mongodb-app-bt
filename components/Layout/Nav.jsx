@@ -1,23 +1,32 @@
-import { Avatar } from '@/components/Avatar';
-import { Button, ButtonLink } from '@/components/Button';
-import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { fetcher } from '@/lib/fetch';
+import { useNotify } from '@/lib/notify';
 import { useCurrentUser } from '@/lib/user';
-import { ROUTER_PATH } from 'constants/routerPath';
+import { NotificationOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, List, Menu, Popover, Space, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Img } from '../Img';
 import Container from './Container';
+import { MENU_ITEMS } from './MenuItems';
 import styles from './Nav.module.css';
 import Spacer from './Spacer';
 import Wrapper from './Wrapper';
 
+const { Paragraph, Text } = Typography;
+
 const UserMenu = ({ user, mutate }) => {
+  const { data, size, setSize, isLoadingMore, isReachingEnd, mutate: notifyMutate } = useNotify({ userId: user._id });
+  const notifyList = data
+    ? data.reduce((acc, val) => [...acc, ...val.notify], [])
+    : [];
+
   const menuRef = useRef();
   const avatarRef = useRef();
 
   const [visible, setVisible] = useState(false);
+  const [notifyOpen, setNotifyOpen] = useState(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -55,15 +64,101 @@ const UserMenu = ({ user, mutate }) => {
     }
   }, [mutate]);
 
+  const handleRemoveNotify = async (id) => {
+    setNotifyOpen(false);
+    try {
+      await fetcher('/api/notify', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      notifyMutate();
+    } catch (e) {
+      toast.error(e.message);
+    }
+  }
+
   return (
     <div className={styles.user}>
-      <button
-        className={styles.trigger}
-        ref={avatarRef}
-        onClick={() => setVisible(!visible)}
-      >
-        <Avatar size={32} username={user.username} url={user.profilePicture} />
-      </button>
+      <Space size="middle">
+        <Popover
+          title={(
+            <h1 style={{ margin: '5px 0' }}>Notifications</h1>
+          )}
+          trigger="click"
+          placement="bottomRight"
+          visible={notifyOpen}
+          onVisibleChange={() => setNotifyOpen(!notifyOpen)}
+          content={(
+            <div>
+              <List
+                className={styles.notifyList}
+                itemLayout="horizontal"
+                dataSource={notifyList}
+                renderItem={item => {
+                  const { creator, post, comment, commentId, _id } = item || {};
+                  const description = ` commented on ${post?.title} (${comment?.content})`;
+                  return (
+                    <Link
+                      passHref
+                      href={`/user/${post?.creator?.username}/post/${post?._id}#${commentId}`}
+                    >
+                      <List.Item onClick={() => handleRemoveNotify(_id)}>
+                        <List.Item.Meta style={{ alignItems: 'center' }}
+                          avatar={<Avatar src={creator?.profilePicture} />}
+                          // title={<a href="https://ant.design">{creator?.name}</a>}
+                          description={(
+                            <Paragraph
+                              ellipsis={{
+                                rows: 2,
+                              }}
+                              className={styles.notifyDescription}
+                              title={creator?.name + description}
+                            >
+                              <strong>{creator?.name}</strong>{description}
+                            </Paragraph>
+                          )}
+                        />
+                      </List.Item>
+                    </Link>
+                  );
+                }}
+              />
+              <div className={styles.loadMoreBtn}>
+                {isReachingEnd ? (
+                  <Text color="secondary">No more comments are found</Text>
+                ) : (
+                  <Button
+                    loading={isLoadingMore}
+                    onClick={() => setSize(size + 1)}
+                  >
+                    Load more
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        >
+          <Badge count={isLoadingMore ? undefined : notifyList?.length} size="small">
+            <Button shape="circle" icon={<NotificationOutlined />} loading={isLoadingMore} />
+          </Badge>
+        </Popover>
+
+        <button
+          className={styles.trigger}
+          ref={avatarRef}
+          onClick={() => setVisible(!visible)}
+        >
+          <Space>
+            <Avatar
+              size="default"
+              alt={user.username}
+              icon={user.profilePicture ? <Img src={user.profilePicture} /> : <UserOutlined />}
+            />
+            {user.username}
+          </Space>
+        </button>
+      </Space>
       <div
         ref={menuRef}
         role="menu"
@@ -72,28 +167,26 @@ const UserMenu = ({ user, mutate }) => {
       >
         {visible && (
           <div className={styles.menu}>
-            <Link passHref href={`/user/${user.username}`}>
-              <a className={styles.item}>Profile</a>
-            </Link>
-            <Link passHref href={ROUTER_PATH.SETTING}>
-              <a className={styles.item}>Settings</a>
-            </Link>
-            <Link passHref href={ROUTER_PATH.NEWS}>
-              <a className={styles.item}>News</a>
-            </Link>
-            <Link passHref href={ROUTER_PATH.POST}>
-              <a className={styles.item}>Manage Posts</a>
-            </Link>
-            <div className={styles.item} style={{ cursor: 'auto' }}>
-              <Container alignItems="center">
-                <span>Theme</span>
-                <Spacer size={0.5} axis="horizontal" />
-                <ThemeSwitcher />
-              </Container>
-            </div>
-            <button onClick={onSignOut} className={styles.item}>
-              Sign out
-            </button>
+            <Menu
+              items={[
+                {
+                  key: 'user',
+                  label: (
+                    <Link passHref href={`/user/${user.username}`}>
+                      <a>Profile</a>
+                    </Link>
+                  ),
+                  icon: <ProfileOutlined />
+                },
+                ...MENU_ITEMS,
+              ]}
+              onClick={(value) => {
+                const { key } = value || {};
+                if (key === 'logout') {
+                  onSignOut();
+                }
+              }}
+            />
           </div>
         )}
       </div>
@@ -123,18 +216,13 @@ const Nav = () => {
             ) : (
               <>
                 <Link passHref href="/login">
-                  <ButtonLink
-                    size="small"
-                    type="success"
-                    variant="ghost"
-                    color="link"
-                  >
+                  <Button>
                     Log in
-                  </ButtonLink>
+                  </Button>
                 </Link>
                 <Spacer axis="horizontal" size={0.25} />
                 <Link passHref href="/sign-up">
-                  <Button size="small" type="success">
+                  <Button type="primary">
                     Sign Up
                   </Button>
                 </Link>

@@ -27,7 +27,7 @@ export async function findPostById(db, id) {
   }
 }
 
-export async function findPosts(db, before, by, limit = 10, published = null) {
+export async function findPosts(db, before, by, limit = 10, published = null, searchKey, sortDate = -1) {
   return db
     .collection('posts')
     .aggregate([
@@ -36,9 +36,14 @@ export async function findPosts(db, before, by, limit = 10, published = null) {
           ...(by && { creatorId: new ObjectId(by) }),
           ...(before && { createdAt: { $lt: before } }),
           ...(published !== null && { published: published === 'true' }),
+          ...(searchKey && { title: { '$regex': searchKey, '$options': 'i' } }),
         },
       },
-      { $sort: { _id: -1 } }, //  updateAt: -1
+      {
+        $sort: {
+          ...(sortDate && { createdAt: Number(sortDate) })
+        }
+      }, //  updateAt: -1, _id: -1,
       { $limit: limit },
       {
         $lookup: {
@@ -72,9 +77,11 @@ export async function insertPost(db, { title, content, creatorId, img }) {
 export async function deletePost(db, { id }) {
   const postRes = await db.collection('posts').deleteOne({ _id: new ObjectId(id) });
   const commentRes = await db.collection('comments').deleteMany({ postId: new ObjectId(id) });
+  const notifyRes = await db.collection('notifications').deleteMany({ postId: new ObjectId(id) });
   return {
     post: postRes,
-    comment: commentRes
+    comment: commentRes,
+    notify: notifyRes
   };
 }
 

@@ -21,6 +21,9 @@ const CommenterInner = ({ user, post }) => {
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      if (isLoading) {
+        return;
+      }
       try {
         setIsLoading(true);
         await fetcher(`/api/posts/${post._id}/comments`, {
@@ -38,7 +41,7 @@ const CommenterInner = ({ user, post }) => {
         setIsLoading(false);
       }
     },
-    [mutate, post._id]
+    [mutate, post._id, isLoading]
   );
 
   return (

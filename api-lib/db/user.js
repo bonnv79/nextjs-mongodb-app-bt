@@ -18,6 +18,31 @@ export async function findUserForAuth(db, userId) {
     .then(async (user) => {
       const permission = await db.collection('permission').findOne({ role_id: user.role_id });
       user.roles = permission?.roles;
+
+      // let notify = await db.collection('notifications').aggregate([
+      //   { $match: { postCreatorId: new ObjectId(user._id) } },
+      //   {
+      //     $sort: {
+      //       createdAt: -1
+      //     }
+      //   },
+      //   { $limit: 10 },
+      // ]).toArray();
+      // const notifyRes = [];
+      // for (let i = 0; i < notify?.length; i++) {
+      //   const { creatorId, postId, commentId } = notify[i];
+      //   const commentUser = await db.collection('users').findOne({ _id: new ObjectId(creatorId) });
+      //   const commentPost = await db.collection('posts').findOne({ _id: new ObjectId(postId) });
+      //   const commentRes = await db.collection('comments').findOne({ _id: new ObjectId(commentId) });
+      //   notifyRes.push({
+      //     ...notify[i],
+      //     creator: commentUser,
+      //     post: commentPost,
+      //     comment: commentRes
+      //   })
+      // }
+      // user.notify = notifyRes;
+
       return user || null;
     });
 }

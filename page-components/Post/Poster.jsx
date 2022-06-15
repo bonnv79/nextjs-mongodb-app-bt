@@ -3,7 +3,7 @@ import { LoadingDots } from '@/components/LoadingDots';
 import { Text, TextLink } from '@/components/Text';
 import Link from 'next/link';
 import styles from './Poster.module.css';
-import PosterInner from './PosterInner';
+import { PosterInner } from '@/components/PosterInner';
 
 const Poster = ({ data, error, isCreate }) => {
   const loading = !data && !error;
