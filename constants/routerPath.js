@@ -8,16 +8,6 @@ export const ROUTER_PATH = {
 };
 
 export const BREADCRUMB_ROUTES = {
-  NEWS: [
-    {
-      path: ROUTER_PATH.HOME,
-      breadcrumbName: 'Home',
-    },
-    {
-      path: ROUTER_PATH.NEWS,
-      breadcrumbName: 'News',
-    }
-  ],
   POST: [
     {
       path: ROUTER_PATH.HOME,
@@ -42,20 +32,6 @@ export const BREADCRUMB_ROUTES = {
       breadcrumbName: 'Post Detail',
     }
   ],
-  NEWS_DETAIL: [
-    {
-      path: ROUTER_PATH.HOME,
-      breadcrumbName: 'Home',
-    },
-    {
-      path: ROUTER_PATH.NEWS,
-      breadcrumbName: 'News',
-    },
-    {
-      path: 'news-detail',
-      breadcrumbName: 'News Detail',
-    }
-  ]
 }
 
 export default {};

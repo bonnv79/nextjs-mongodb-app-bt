@@ -23,3 +23,6 @@
 
 ##### Release date: 14/6/2022
 - improvement: Add filter and sort for post
+
+##### Release date: 15/6/2022
+- improvement: Modify UI

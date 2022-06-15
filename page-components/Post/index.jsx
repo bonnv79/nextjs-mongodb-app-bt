@@ -1,6 +1,5 @@
 import { Spacer } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
-import { Result } from '@/components/Result';
 import { useCurrentUser } from '@/lib/user';
 import { FileAddOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -16,13 +15,10 @@ export const Post = () => {
   const [searchKey, setSearchKey] = useState('');
   const [sortDate, setSortDate] = useState(-1);
   const [published, setPublished] = useState(undefined);
+  const [owner, setOwner] = useState(false);
   const { data, error } = useCurrentUser();
 
-  if (!data?.user) {
-    return <Result code={403} />
-  }
-
-  const isViewAllPost = checkPermission(data, PERMISSION.POST.POST_VIEW);
+  const authen = Boolean(data?.user);
   const isCreate = checkPermission(data, PERMISSION.POST.POST_CREATE);
 
   const onChange = () => {
@@ -54,7 +50,9 @@ export const Post = () => {
       sortDate={sortDate}
       setSortDate={setSortDate}
       published={published}
-      setPublished={setPublished}
+      setPublished={authen && setPublished}
+      owner={owner}
+      setOwner={authen && setOwner}
     >
       {searchKey}
       {open && (
@@ -65,10 +63,10 @@ export const Post = () => {
       )}
       <PostList
         user={data?.user}
-        isViewAllPost={isViewAllPost}
         searchKey={searchKey}
-        published={published}
+        published={authen ? published : true}
         sortDate={sortDate}
+        owner={owner}
       />
     </PageHeader>
   );

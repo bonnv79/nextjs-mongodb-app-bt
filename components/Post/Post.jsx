@@ -2,14 +2,13 @@ import { Avatar } from '@/components/Avatar';
 import { Container } from '@/components/Layout';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './Post.module.css';
 import { CheckCircleOutlined, CloseOutlined, EditOutlined, StopOutlined } from '@ant-design/icons';
-import { useCallback } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
-import { Button, Col, Row, Spin, Tooltip, Typography } from 'antd';
+import { Button, Col, Popconfirm, Row, Spin, Tooltip, Typography } from 'antd';
 import { PosterInner } from '@/components/PosterInner';
 import { EditorView } from '../EditorView';
 import { getTimestamp, StripHTMLTags } from 'utils';
@@ -33,6 +32,12 @@ const Post = ({
   const { mutate } = usePostPages();
 
   const timestampTxt = getTimestamp(post.createdAt);
+
+  useEffect(() => {
+    if (!post.img) {
+      setPost({ ...post, img: DEFAULT_POST })
+    }
+  }, [post])
 
   const handleDelete = useCallback(
     async (e) => {
@@ -156,7 +161,7 @@ const Post = ({
               <Col span={detailMode ? 24 : 8} className={styles.imgContainer} >
                 <Img
                   className={styles.img}
-                  src={post.img || DEFAULT_POST}
+                  src={post.img}
                   alt={post.title}
                   height={250}
                 />
@@ -205,7 +210,7 @@ const Post = ({
 
         <div className={styles.action}>
           {
-            (isPublished || isEdit) && (
+            isPublished && (
               <Button
                 type="text"
                 shape='circle'
@@ -244,18 +249,27 @@ const Post = ({
 
           {
             isDelete && (
-              <Button
-                title="Delete"
-                type="text"
-                shape='circle'
-                icon={(
-                  <Tooltip title="Delete">
-                    <CloseOutlined />
-                  </Tooltip>
-                )}
-                className={styles.closeBtn}
-                onClick={handleDelete}
-              />
+              <Popconfirm
+                placement="bottomRight"
+                title="Are you sure to delete this post?"
+                onConfirm={handleDelete}
+                onCancel={e => e.preventDefault()}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  title="Delete"
+                  type="text"
+                  shape='circle'
+                  icon={(
+                    <Tooltip title="Delete">
+                      <CloseOutlined />
+                    </Tooltip>
+                  )}
+                  className={styles.closeBtn}
+                  onClick={e => e.preventDefault()}
+                />
+              </Popconfirm>
             )
           }
         </div>

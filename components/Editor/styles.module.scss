@@ -1,12 +1,16 @@
 .root {
   // height: 500px;
-  height: calc(100vh - 200px);
-  min-height: 200px;
-  display: inline-block;
+  // height: calc(100vh - 200px);
+  // min-height: 200px;
+  // display: inline-block;
 
   :global {
     .ql-toolbar {
       border-radius: 5px 5px 0 0;
+      position: sticky;
+      top: 100px;
+      background-color: var(--background);
+      z-index: 1;
     }
 
     .ql-container {

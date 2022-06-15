@@ -55,7 +55,7 @@
   box-shadow: var(--shadow-medium);
   border-radius: 5px;
   display: inline-block;
-  min-width: 220px;
+  min-width: 180px;
 }
 
 .item {
@@ -80,4 +80,21 @@
 .item:hover {
   color: var(--foreground);
   background: var(--accents-1);
+}
+
+.notifyList {
+  width: 368px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+.notifyDescription {
+  margin: 0 !important;
+}
+
+.loadMoreBtn {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

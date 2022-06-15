@@ -26,6 +26,8 @@ export const PageHeader = ({
   published,
   setPublished,
   filterTitle,
+  owner,
+  setOwner,
   ...props
 }) => {
   const initExtra = [...extra];
@@ -78,6 +80,22 @@ export const PageHeader = ({
                       <Radio value={undefined}>All</Radio>
                       <Radio value={true}>Published</Radio>
                       <Radio value={false}>Unpublished</Radio>
+                    </Space>
+                  </Radio.Group>
+                </Space>
+              </Col>
+            )}
+            {setOwner && (
+              <Col span={12} >
+                <Space direction="vertical">
+                  <strong>Filter Owner</strong>
+                  <Radio.Group
+                    onChange={e => setOwner(e.target.value)}
+                    value={owner}
+                  >
+                    <Space direction="vertical">
+                      <Radio value={false}>All</Radio>
+                      <Radio value={true}>Owner</Radio>
                     </Space>
                   </Radio.Group>
                 </Space>

@@ -3,18 +3,8 @@ import { database } from '@/api-lib/middlewares';
 import { UserPost } from '@/page-components/UserPost';
 import nc from 'next-connect';
 import Head from 'next/head';
-import { Result } from '@/components/Result';
-import { useCurrentUser } from '@/lib/user';
 
 export default function UserPostPage({ post }) {
-  const { data } = useCurrentUser();
-
-  if (!data?.user) {
-    return (
-      <Result code={403} />
-    )
-  }
-
   if (typeof post.createdAt !== 'string') {
     post.createdAt = new Date(post.createdAt);
   }

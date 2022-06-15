@@ -16,4 +16,7 @@ export const ValidateProps = {
     id: { type: 'string', minLength: 1, maxLength: 280 },
     content: { type: 'string', minLength: 1 },
   },
+  notify: {
+    id: { type: 'string', minLength: 1, maxLength: 280 },
+  },
 };

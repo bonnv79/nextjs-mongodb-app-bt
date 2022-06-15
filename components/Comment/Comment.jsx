@@ -12,7 +12,14 @@ import { fetcher } from '@/lib/fetch';
 
 const { TextArea } = Input;
 
-const Comment = ({ mutate = () => { }, comment, className, isDelete = false, user = {} }) => {
+const Comment = ({
+  mutate = () => { },
+  comment,
+  className,
+  isDelete = false,
+  user = {},
+  active
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -76,8 +83,8 @@ const Comment = ({ mutate = () => { }, comment, className, isDelete = false, use
   }
 
   return (
-    <Spin spinning={isLoading}>
-      <div className={clsx(styles.root, className)}>
+    <Spin spinning={isLoading} id={comment._id}>
+      <div className={clsx(styles.root, className, active && styles.active)}>
         <Link href={`/user/${comment.creator.username}`}>
           <a>
             <Container className={styles.creator}>
@@ -104,8 +111,28 @@ const Comment = ({ mutate = () => { }, comment, className, isDelete = false, use
           {
             editMode && (
               <Space style={{ marginTop: 8 }}>
-                <Button loading={editing} size="small" type="text" shape='round' icon={<SaveOutlined />} onClick={handleSave}>Save</Button>
-                <Button loading={editing} size="small" type="text" shape='round' icon={<CloseSquareOutlined />} onClick={handleCancel}>Cancel</Button>
+                <Button
+                  className={styles.actionBtn}
+                  loading={editing}
+                  size="small"
+                  type="text"
+                  shape='round'
+                  icon={<SaveOutlined />}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+                <Button
+                  className={styles.actionBtn}
+                  loading={editing}
+                  size="small"
+                  type="text"
+                  shape='round'
+                  icon={<CloseSquareOutlined />}
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </Button>
               </Space>
             )
           }

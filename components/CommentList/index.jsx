@@ -3,12 +3,28 @@ import { Comment } from '@/components/Comment';
 import { Container, Spacer } from '@/components/Layout';
 import { Text } from '@/components/Text';
 import { useCommentPages } from '@/lib/comment';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import styles from './CommentList.module.css';
 
 const CommentList = ({ post, isDelete = false, user }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd, mutate } = useCommentPages(
     { postId: post._id }
   );
+  const router = useRouter();
+  const { asPath } = router;
+  const [, commentId] = asPath.split('#');
+
+  useEffect(() => {
+    if (commentId) {
+      setTimeout(() => {
+        const element = document.getElementById(commentId);
+        if (element) {
+          element.scrollIntoView();
+        }
+      }, 500)
+    }
+  }, [commentId]);
 
   const comments = data
     ? data.reduce((acc, val) => [...acc, ...val.comments], [])
@@ -19,7 +35,15 @@ const CommentList = ({ post, isDelete = false, user }) => {
       <Spacer axis="vertical" size={1} />
       {comments.map((comment) => (
         <div key={comment._id} className={styles.wrap}>
-          <Comment mutate={mutate} post={post} className={styles.comment} comment={comment} isDelete={isDelete} user={user} />
+          <Comment
+            mutate={mutate}
+            post={post}
+            className={styles.comment}
+            comment={comment}
+            isDelete={isDelete}
+            user={user}
+            active={commentId === comment._id}
+          />
         </div>
       ))}
       <Container justifyContent="center">

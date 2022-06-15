@@ -77,9 +77,11 @@ export async function insertPost(db, { title, content, creatorId, img }) {
 export async function deletePost(db, { id }) {
   const postRes = await db.collection('posts').deleteOne({ _id: new ObjectId(id) });
   const commentRes = await db.collection('comments').deleteMany({ postId: new ObjectId(id) });
+  const notifyRes = await db.collection('notifications').deleteMany({ postId: new ObjectId(id) });
   return {
     post: postRes,
-    comment: commentRes
+    comment: commentRes,
+    notify: notifyRes
   };
 }
 

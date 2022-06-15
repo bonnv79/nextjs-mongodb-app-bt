@@ -12,11 +12,11 @@ const initGetPath = (post) => (`/user/${post?.creator?.username}/post/${post?._i
 
 const PostList = ({
   user,
-  isViewAllPost,
   searchKey,
   published,
   sortDate,
-  getPath = initGetPath
+  getPath = initGetPath,
+  owner
 }) => {
   const {
     data,
@@ -25,7 +25,7 @@ const PostList = ({
     isLoadingMore,
     isReachingEnd
   } = usePostPages({
-    creatorId: isViewAllPost ? undefined : user?._id,
+    creatorId: owner ? user?._id : undefined,
     searchKey,
     published,
     sortDate
@@ -46,7 +46,12 @@ const PostList = ({
           passHref
         >
           <div className={styles.wrap}>
-            <Post className={styles.post} post={post} isDelete={isDelete} isPublished={isEdit} />
+            <Post
+              className={styles.post}
+              post={post}
+              isDelete={isDelete || user?._id === post?.creatorId}
+              isPublished={isEdit}
+            />
           </div>
         </Link>
       ))}
