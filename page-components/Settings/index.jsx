@@ -1,4 +1,3 @@
-import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import { Input, Textarea } from '@/components/Input';
 import { Container, Spacer } from '@/components/Layout';
@@ -6,6 +5,8 @@ import Wrapper from '@/components/Layout/Wrapper';
 import { Result } from '@/components/Result';
 import { fetcher } from '@/lib/fetch';
 import { useCurrentUser } from '@/lib/user';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -173,7 +174,12 @@ const AboutYou = ({ user, mutate }) => {
         <Spacer size={0.5} axis="vertical" />
         <span className={styles.label}>Your Avatar</span>
         <div className={styles.avatar}>
-          <Avatar size={96} username={user.username} url={avatarHref} />
+          <Avatar
+            size={96}
+            alt={user.username}
+            src={avatarHref}
+            icon={<UserOutlined />}
+          />
           <input
             aria-label="Your Avatar"
             type="file"

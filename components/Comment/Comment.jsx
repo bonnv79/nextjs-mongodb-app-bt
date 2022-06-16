@@ -1,8 +1,7 @@
-import { Avatar } from '@/components/Avatar';
 import { Container } from '@/components/Layout';
-import { CloseOutlined, CloseSquareOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { CloseOutlined, CloseSquareOutlined, EditOutlined, SaveOutlined, UserOutlined } from '@ant-design/icons';
 import { format } from '@lukeed/ms';
-import { Button, Input, Space, Spin } from 'antd';
+import { Avatar, Button, Input, Space, Spin } from 'antd';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useCallback, useState, useMemo } from 'react';
@@ -90,8 +89,9 @@ const Comment = ({
             <Container className={styles.creator}>
               <Avatar
                 size={36}
-                url={comment.creator.profilePicture}
-                username={comment.creator.username}
+                src={comment.creator.profilePicture}
+                alt={comment.creator.username}
+                icon={<UserOutlined />}
               />
               <Container column className={styles.meta}>
                 <p className={styles.name}>{comment.creator.name}</p>

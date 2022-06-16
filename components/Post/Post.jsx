@@ -1,14 +1,13 @@
-import { Avatar } from '@/components/Avatar';
 import { Container } from '@/components/Layout';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import styles from './Post.module.css';
-import { CheckCircleOutlined, CloseOutlined, EditOutlined, StopOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseOutlined, EditOutlined, StopOutlined, UserOutlined } from '@ant-design/icons';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
-import { Button, Col, Popconfirm, Row, Spin, Tooltip, Typography } from 'antd';
+import { Button, Col, Popconfirm, Row, Space, Spin, Tooltip, Typography, Avatar } from 'antd';
 import { PosterInner } from '@/components/PosterInner';
 import { EditorView } from '../EditorView';
 import { getTimestamp, StripHTMLTags } from 'utils';
@@ -140,9 +139,10 @@ const Post = ({
             <div>
               <Container className={styles.creator}>
                 <Avatar
-                  size={36}
-                  url={post.creator.profilePicture}
-                  username={post.creator.username}
+                  size='large'
+                  src={post.creator.profilePicture}
+                  alt={post.creator.username}
+                  icon={<UserOutlined />}
                 />
                 <Container column className={styles.meta}>
                   <p className={styles.name}>{post.creator.name}</p>
@@ -157,26 +157,41 @@ const Post = ({
           editMode ? (
             <PosterInner post={post} save={handleSave} cancel={() => setEditMode(false)} />
           ) : (
-            <Row gutter={[16, 16]}>
-              <Col span={detailMode ? 24 : 8} className={styles.imgContainer} >
-                <Img
-                  className={styles.img}
-                  src={post.img}
-                  alt={post.title}
-                  height={250}
-                />
-              </Col>
+            <Row gutter={[0, 0]}>
+              {
+                !detailMode && (
+                  <Col span={detailMode ? 24 : 8} className={styles.imgContainer} >
+                    <Img
+                      className={styles.img}
+                      src={post.img}
+                      alt={post.title}
+                      height={250}
+                    />
+                  </Col>
+                )
+              }
               <Col span={detailMode ? 24 : 16} style={{ display: 'flex', alignItems: 'center' }} >
-                <div style={{ width: '100%' }}>
-                  <Paragraph
-                    style={{ display: hideTitle ? 'none' : undefined }}
-                    className={styles.title}
-                    ellipsis={detailMode ? false : {
-                      rows: 2
-                    }}
-                  >
-                    {post.title}
-                  </Paragraph>
+                <div style={{ width: '100%', paddingLeft: 16 }}>
+                  <Space size="middle">
+                    {
+                      detailMode && (
+                        <Avatar
+                          size={64}
+                          src={post.img}
+                          alt={post.title}
+                        />
+                      )
+                    }
+                    <Paragraph
+                      style={{ display: hideTitle ? 'none' : undefined }}
+                      className={styles.title}
+                      ellipsis={detailMode ? false : {
+                        rows: 2
+                      }}
+                    >
+                      {post.title}
+                    </Paragraph>
+                  </Space>
                   <div className={styles.wrap}>
                     {
                       detailMode ? (

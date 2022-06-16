@@ -1,4 +1,3 @@
-import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Container } from '@/components/Layout';
@@ -7,6 +6,8 @@ import { Text, TextLink } from '@/components/Text';
 import { useCommentPages } from '@/lib/comment';
 import { fetcher } from '@/lib/fetch';
 import { useCurrentUser } from '@/lib/user';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
 import Link from 'next/link';
 import { useCallback, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -47,7 +48,12 @@ const CommenterInner = ({ user, post }) => {
   return (
     <form onSubmit={onSubmit}>
       <Container className={styles.poster}>
-        <Avatar size={40} username={user.username} url={user.profilePicture} />
+        <Avatar
+          size={40}
+          alt={user.username}
+          src={user.profilePicture}
+          icon={<UserOutlined />}
+        />
         <Input
           ref={contentRef}
           className={styles.input}
