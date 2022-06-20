@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from './CommentList.module.css';
 
-const CommentList = ({ post, isDelete = false, user }) => {
+const CommentList = ({ post, isDelete = false, user, parentId, child }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd, mutate } = useCommentPages(
-    { postId: post._id }
+    { postId: post._id, parentId }
   );
   const router = useRouter();
   const { asPath } = router;
@@ -30,6 +30,10 @@ const CommentList = ({ post, isDelete = false, user }) => {
     ? data.reduce((acc, val) => [...acc, ...val.comments], [])
     : [];
 
+  if (child && comments?.length <= 0) {
+    return null;
+  }
+
   return (
     <div className={styles.root}>
       <Spacer axis="vertical" size={1} />
@@ -46,7 +50,7 @@ const CommentList = ({ post, isDelete = false, user }) => {
           />
         </div>
       ))}
-      <Container justifyContent="center">
+      {!child && <Container justifyContent="center">
         {isReachingEnd ? (
           <Text color="secondary">No more comments are found</Text>
         ) : (
@@ -59,7 +63,7 @@ const CommentList = ({ post, isDelete = false, user }) => {
             Load more
           </Button>
         )}
-      </Container>
+      </Container>}
     </div>
   );
 };

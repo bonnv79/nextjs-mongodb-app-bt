@@ -13,7 +13,7 @@ import { useCallback, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import styles from './Commenter.module.css';
 
-const CommenterInner = ({ user, post }) => {
+const CommenterInner = ({ user, post, parentId, save = () => { } }) => {
   const contentRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +30,7 @@ const CommenterInner = ({ user, post }) => {
         await fetcher(`/api/posts/${post._id}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: contentRef.current.value }),
+          body: JSON.stringify({ content: contentRef.current.value, parentId }),
         });
         toast.success('You have added a comment');
         contentRef.current.value = '';
@@ -40,9 +40,10 @@ const CommenterInner = ({ user, post }) => {
         toast.error(e.message);
       } finally {
         setIsLoading(false);
+        save(false);
       }
     },
-    [mutate, post._id, isLoading]
+    [mutate, post._id, isLoading, parentId, save]
   );
 
   return (
@@ -68,7 +69,7 @@ const CommenterInner = ({ user, post }) => {
   );
 };
 
-const Commenter = ({ post }) => {
+const Commenter = ({ post, parentId, save }) => {
   const { data, error } = useCurrentUser();
   const loading = !data && !error;
 
@@ -83,7 +84,7 @@ const Commenter = ({ post }) => {
       {loading ? (
         <LoadingDots>Loading</LoadingDots>
       ) : data?.user ? (
-        <CommenterInner post={post} user={data.user} />
+        <CommenterInner post={post} user={data.user} parentId={parentId} save={save} />
       ) : (
         <Text color="secondary">
           Please{' '}
