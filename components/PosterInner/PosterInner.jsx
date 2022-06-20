@@ -1,16 +1,17 @@
-import { Button, Form, Input, Space } from 'antd';
+import { Avatar, Button, Form, Input, Space } from 'antd';
 import toast from 'react-hot-toast';
 import { useState, useCallback, useRef } from 'react';
 import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import { Editor } from '@/components/Editor';
-import styles from './PosterInner.module.css';
+import styles from './PosterInner.module.scss';
 import { DEFAULT_UPLOAD } from 'constants';
-import { Img } from '@/components/Img';
+
+const { TextArea } = Input;
 
 const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [content, setContent] = useState(post.content);
+  const [content, setContent] = useState(post.content || undefined);
   const [form] = Form.useForm();
   const editMode = post._id;
   const profilePictureRef = useRef();
@@ -88,39 +89,40 @@ const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
       layout='vertical'
       form={form}
     >
-      <div className={styles.imgRoot}>
-        <div className={styles.imgContainer}>
-          <input
-            className={styles.imgInput}
-            aria-label="post-image"
-            type="file"
-            accept="image/*"
-            ref={profilePictureRef}
-            onChange={onAvatarChange}
-          />
-          <Img
-            className={styles.img}
-            src={avatarHref || DEFAULT_UPLOAD}
-            alt={post.title}
-            height={250}
-          />
+      <Space className={styles.header}>
+        <div className={styles.imgRoot}>
+          <div className={styles.imgContainer}>
+            <input
+              className={styles.imgInput}
+              aria-label="post-image"
+              type="file"
+              accept="image/*"
+              ref={profilePictureRef}
+              onChange={onAvatarChange}
+            />
+            <Avatar
+              size={80}
+              src={avatarHref || DEFAULT_UPLOAD}
+              alt={post.title}
+            />
+          </div>
         </div>
-      </div>
 
-      <Form.Item
-        name="title"
-        rules={[{ required: true, message: 'Please input post\'s title!' }]}
-        initialValue={post.title}
-      >
-        <Input placeholder={`What's on your post title, ${user.name}?`} />
-      </Form.Item>
+        <Form.Item
+          name="title"
+          rules={[{ required: true, message: 'Please input post\'s title!' }]}
+          initialValue={post.title}
+        >
+          <TextArea className={styles.title} rows={2} placeholder={`What's on your post title, ${user.name}?`} />
+        </Form.Item>
+      </Space>
 
       <Form.Item
         name="content"
         rules={[{ required: true, message: 'Please input post\'s content!' }]}
         initialValue={post.content}
       >
-        <Editor value={content} onChange={setContent} />
+        <Editor value={content} onChange={setContent} placeholder={`What's on your post content, ${user.name}?`} />
       </Form.Item>
 
       <Form.Item style={{ textAlign: 'center', margin: 0 }}>

@@ -26,3 +26,9 @@
 
 ##### Release date: 15/6/2022
 - improvement: Modify UI
+
+##### Release date: 16/6/2022
+- improvement: Modify create and edit post form
+
+##### Release date: 20/6/2022
+- new-feature: comment multi level

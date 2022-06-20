@@ -67,7 +67,8 @@ export async function insertPost(db, { title, content, creatorId, img }) {
     creatorId,
     createdAt: createTime,
     updateAt: createTime,
-    img
+    img,
+    published: false
   };
   const { insertedId } = await db.collection('posts').insertOne(post);
   post._id = insertedId;

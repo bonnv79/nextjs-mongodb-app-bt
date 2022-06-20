@@ -105,7 +105,13 @@ const UserMenu = ({ user, mutate }) => {
                     >
                       <List.Item onClick={() => handleRemoveNotify(_id)}>
                         <List.Item.Meta style={{ alignItems: 'center' }}
-                          avatar={<Avatar src={creator?.profilePicture} />}
+                          avatar={(
+                            <Avatar
+                              size="large"
+                              icon={<UserOutlined />}
+                              src={creator?.profilePicture || undefined}
+                            />
+                          )}
                           // title={<a href="https://ant.design">{creator?.name}</a>}
                           description={(
                             <Paragraph
