@@ -44,6 +44,16 @@ export const getMenuItems = ({ user }) => {
       permission: PERMISSION.PERMISSION_VIEW,
     },
     {
+      key: ROUTER_PATH.USER_MANAGER,
+      label: (
+        <Link passHref href={ROUTER_PATH.USER_MANAGER}>
+          <a>User Manager</a>
+        </Link>
+      ),
+      icon: <UsergroupAddOutlined />,
+      permission: PERMISSION.USER_MANAGER_VIEW,
+    },
+    {
       key: 'logout',
       label: (
         <span>

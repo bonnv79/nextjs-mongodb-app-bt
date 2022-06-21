@@ -1,18 +1,18 @@
 import { PageHeader } from '@/components/PageHeader';
 import { BREADCRUMB_ROUTES } from 'constants/routerPath';
-import PermissionRoles from './PermissionRoles';
 import { Result } from '@/components/Result';
 import { useCurrentUser } from '@/lib/user';
 import { checkPermission } from 'utils';
 import { PERMISSION } from 'constants/permission';
-import Creater from './Creater';
-import { Button, Modal } from 'antd';
 import { useState } from 'react';
+import UserManagerTable from './UserManagerTable';
+import { Button, Modal } from 'antd';
+import Creater from './Creater';
 
-export const Permission = () => {
+export const UserManager = () => {
   const { data } = useCurrentUser();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchKey, setSearchKey] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -22,32 +22,32 @@ export const Permission = () => {
     setIsModalVisible(false);
   };
 
-  if (!checkPermission(data, PERMISSION.PERMISSION_VIEW)) {
+  if (!checkPermission(data, PERMISSION.USER_MANAGER_VIEW)) {
     return <Result code={403} />
   }
 
-  const isCreate = checkPermission(data, PERMISSION.PERMISSION_CREATE);
-  const isEdit = checkPermission(data, PERMISSION.PERMISSION_EDIT);
-  const isDelete = checkPermission(data, PERMISSION.PERMISSION_DELETE);
+  const isCreate = checkPermission(data, PERMISSION.USER_MANAGER_CREATE);
+  const isEdit = checkPermission(data, PERMISSION.USER_MANAGER_EDIT);
+  const isDelete = checkPermission(data, PERMISSION.USER_MANAGER_DELETE);
   const props = { isCreate, isEdit, isDelete, searchKey };
 
   return (
     <PageHeader
-      title="Permission"
+      title="User Manager"
       breadcrumb={{
-        routes: BREADCRUMB_ROUTES.PERMISSION
+        routes: BREADCRUMB_ROUTES.USER_MANAGER
       }}
+      // searchKey={searchKey}
+      // onSearch={setSearchKey}
       extra={[
         isCreate && <Button key="create" type="primary" onClick={showModal}>Create</Button>
       ]}
-      searchKey={searchKey}
-      onSearch={setSearchKey}
     >
-      <PermissionRoles {...props} />
+      <UserManagerTable {...props} />
 
       {isCreate && (
         <Modal
-          title="Create user group"
+          title="Create User"
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleOk}
