@@ -20,4 +20,9 @@ export const ValidateProps = {
   notify: {
     id: { type: 'string', minLength: 1, maxLength: 280 },
   },
+  permission: {
+    id: { type: 'string', minLength: 1, maxLength: 280 },
+    role_id: { type: 'string', minLength: 1, maxLength: 280 },
+    roles: { type: 'array' },
+  },
 };

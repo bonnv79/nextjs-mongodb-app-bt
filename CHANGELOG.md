@@ -32,3 +32,6 @@
 
 ##### Release date: 20/6/2022
 - new-feature: comment multi level
+
+##### Release date: 21/6/2022
+- new-feature: Add Permission page

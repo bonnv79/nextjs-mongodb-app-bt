@@ -1,7 +1,7 @@
 import { fetcher } from '@/lib/fetch';
 import { useNotify } from '@/lib/notify';
 import { useCurrentUser } from '@/lib/user';
-import { NotificationOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
+import { NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Button, List, Menu, Popover, Space, Typography } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Img } from '../Img';
 import Container from './Container';
-import { MENU_ITEMS } from './MenuItems';
+import { getMenuItems } from './MenuItems';
 import styles from './Nav.module.css';
 import Spacer from './Spacer';
 import Wrapper from './Wrapper';
@@ -174,18 +174,7 @@ const UserMenu = ({ user, mutate }) => {
         {visible && (
           <div className={styles.menu}>
             <Menu
-              items={[
-                {
-                  key: 'user',
-                  label: (
-                    <Link passHref href={`/user/${user.username}`}>
-                      <a>Profile</a>
-                    </Link>
-                  ),
-                  icon: <ProfileOutlined />
-                },
-                ...MENU_ITEMS,
-              ]}
+              items={getMenuItems({ user })}
               onClick={(value) => {
                 const { key } = value || {};
                 if (key === 'logout') {

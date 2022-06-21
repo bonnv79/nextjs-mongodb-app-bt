@@ -19,7 +19,7 @@ export const Post = () => {
   const { data, error } = useCurrentUser();
 
   const authen = Boolean(data?.user);
-  const isCreate = checkPermission(data, PERMISSION.POST.POST_CREATE);
+  const isCreate = checkPermission(data, PERMISSION.POST_CREATE);
 
   const onChange = () => {
     setOpen(!open);
