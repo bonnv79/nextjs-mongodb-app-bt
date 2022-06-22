@@ -40,3 +40,4 @@
 ##### Release date: 22/6/2022
 - improvement: format code for Permission and User Manager page
 - improvement: format hook code
+- improvement: increase the performance of checking permission

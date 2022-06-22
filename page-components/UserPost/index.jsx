@@ -3,6 +3,7 @@ import CommentList from '@/components/CommentList';
 import { Spacer } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Post } from '@/components/Post';
+import { usePermissionByRoleId } from '@/lib/permission';
 import { useCurrentUser } from '@/lib/user';
 import { PERMISSION } from 'constants/permission';
 import { BREADCRUMB_ROUTES } from 'constants/routerPath';
@@ -10,10 +11,12 @@ import { checkPermission } from 'utils';
 import styles from './UserPost.module.css';
 
 export const UserPost = ({ post = {} }) => {
-  const { data } = useCurrentUser();
-  const isEdit = checkPermission(data, PERMISSION.POST_EDIT);
-  const isDelete = checkPermission(data, PERMISSION.POST_DELETE);
-  const ownerPost = post?.creatorId === data?.user?._id;
+  const { user } = useCurrentUser();
+  const { roles } = usePermissionByRoleId(user?.role_id);
+
+  const isEdit = checkPermission(roles, PERMISSION.POST_EDIT);
+  const isDelete = checkPermission(roles, PERMISSION.POST_DELETE);
+  const ownerPost = post?.creatorId === user?._id;
 
   return (
     <PageHeader
@@ -27,7 +30,7 @@ export const UserPost = ({ post = {} }) => {
 
       <h3 className={styles.subtitle}>Comments</h3>
       <Commenter post={post} />
-      <CommentList post={post} isDelete={isDelete} user={data?.user} />
+      <CommentList post={post} isDelete={isDelete} user={user} />
     </PageHeader>
   );
 };

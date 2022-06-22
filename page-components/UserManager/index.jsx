@@ -8,9 +8,11 @@ import { useState } from 'react';
 import DataTable from './DataTable';
 import { Button, Modal } from 'antd';
 import Creater from './Creater';
+import { usePermissionByRoleId } from '@/lib/permission';
 
 export const UserManager = () => {
   const { user, isReachingEnd } = useCurrentUser();
+  const { roles, isReachingEnd: isReachingEndPer } = usePermissionByRoleId(user?.role_id);
   const [searchKey, setSearchKey] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -22,13 +24,13 @@ export const UserManager = () => {
     setIsModalVisible(false);
   };
 
-  if (!checkPermission(user, PERMISSION.USER_MANAGER_VIEW)) {
-    return <Result code={403} loading={!isReachingEnd} />
+  if (!checkPermission(roles, PERMISSION.USER_MANAGER_VIEW)) {
+    return <Result code={403} loading={!isReachingEnd || !isReachingEndPer} />
   }
 
-  const isCreate = checkPermission(user, PERMISSION.USER_MANAGER_CREATE);
-  const isEdit = checkPermission(user, PERMISSION.USER_MANAGER_EDIT);
-  const isDelete = checkPermission(user, PERMISSION.USER_MANAGER_DELETE);
+  const isCreate = checkPermission(roles, PERMISSION.USER_MANAGER_CREATE);
+  const isEdit = checkPermission(roles, PERMISSION.USER_MANAGER_EDIT);
+  const isDelete = checkPermission(roles, PERMISSION.USER_MANAGER_DELETE);
   const props = { isCreate, isEdit, isDelete, searchKey };
 
   return (

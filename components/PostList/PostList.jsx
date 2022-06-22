@@ -2,6 +2,7 @@ import { Button } from '@/components/Button';
 import { Container } from '@/components/Layout';
 import { Post } from '@/components/Post';
 import { Text } from '@/components/Text';
+import { usePermissionByRoleId } from '@/lib/permission';
 import { usePostPages } from '@/lib/post';
 import { PERMISSION } from 'constants/permission';
 import Link from 'next/link';
@@ -30,9 +31,10 @@ const PostList = ({
     published,
     sortDate
   });
+  const { roles } = usePermissionByRoleId(user?.role_id);
   const posts = parseDataPage(data);
-  const isDelete = checkPermission(user, PERMISSION.POST_DELETE);
-  const isEdit = checkPermission(user, PERMISSION.POST_EDIT);
+  const isDelete = checkPermission(roles, PERMISSION.POST_DELETE);
+  const isEdit = checkPermission(roles, PERMISSION.POST_EDIT);
 
   return (
     <div className={styles.root}>

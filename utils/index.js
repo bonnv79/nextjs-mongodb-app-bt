@@ -1,8 +1,8 @@
 import { format } from '@lukeed/ms';
 import { useMemo } from 'react';
 
-export const checkPermission = (data, role) => {
-  return !!data?.user?.roles?.[role] || !!data?.roles?.[role];
+export const checkPermission = (roles, role) => {
+  return !!roles?.[role];
 }
 
 export const StripHTMLTags = (value) => {
