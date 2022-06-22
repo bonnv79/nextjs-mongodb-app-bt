@@ -4,7 +4,7 @@ import { ROUTER_PATH } from "constants/routerPath";
 import Link from "next/link";
 import { checkPermission } from "utils";
 
-export const getMenuItems = ({ user }) => {
+export const getMenuItems = ({ user, roles }) => {
   const menuItems = [
     {
       key: 'user',
@@ -64,5 +64,5 @@ export const getMenuItems = ({ user }) => {
     },
   ];
 
-  return menuItems.filter(item => !item.permission || checkPermission(user, item.permission));
+  return menuItems.filter(item => !item.permission || checkPermission(roles, item.permission));
 };

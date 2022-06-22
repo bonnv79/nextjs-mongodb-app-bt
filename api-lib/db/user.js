@@ -16,8 +16,8 @@ export async function findUserForAuth(db, userId) {
     .collection('users')
     .findOne({ _id: new ObjectId(userId) }, { projection: { password: 0 } })
     .then(async (user) => {
-      const permission = await db.collection('permission').findOne({ role_id: user.role_id });
-      user.roles = permission?.roles;
+      // const permission = await db.collection('permission').findOne({ role_id: user.role_id });
+      // user.roles = permission?.roles;
 
       // let notify = await db.collection('notifications').aggregate([
       //   { $match: { postCreatorId: new ObjectId(user._id) } },

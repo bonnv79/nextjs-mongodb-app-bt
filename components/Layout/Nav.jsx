@@ -1,5 +1,6 @@
 import { fetcher } from '@/lib/fetch';
 import { useNotify } from '@/lib/notify';
+import { usePermissionByRoleId } from '@/lib/permission';
 import { useCurrentUser } from '@/lib/user';
 import { NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Button, List, Menu, Popover, Space, Typography } from 'antd';
@@ -21,6 +22,7 @@ const { Paragraph, Text } = Typography;
 const UserMenu = ({ user, mutate }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd, mutate: notifyMutate } = useNotify({ userId: user._id });
   const notifyList = parseDataPage(data);
+  const { roles } = usePermissionByRoleId(user?.role_id);
 
   const menuRef = useRef();
   const avatarRef = useRef();
@@ -174,7 +176,7 @@ const UserMenu = ({ user, mutate }) => {
         {visible && (
           <div className={styles.menu}>
             <Menu
-              items={getMenuItems({ user })}
+              items={getMenuItems({ user, roles })}
               onClick={(value) => {
                 const { key } = value || {};
                 if (key === 'logout') {
