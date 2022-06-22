@@ -47,10 +47,32 @@ export async function findUserForAuth(db, userId) {
     });
 }
 
+export async function findUsers(db, { page, pageSize, searchKey }) {
+  return db
+    .collection('users')
+    .aggregate([
+      {
+        $match: {
+          ...(searchKey && { role_id: { '$regex': searchKey, '$options': 'i' } }),
+        },
+      },
+      { $sort: { _id: -1 } },
+      // { $limit: pageSize }, // TODO
+      { $project: { password: 0 } },
+      {
+        $facet: {
+          metadata: [{ $count: "total" }, { $addFields: { page } }],
+          data: [{ $skip: page * pageSize }, { $limit: pageSize }]
+        }
+      }
+    ])
+    .toArray();
+}
+
 export async function findUserById(db, userId) {
   return db
     .collection('users')
-    .findOne({ _id: new ObjectId(userId) }, { projection: dbProjectionUsers() })
+    .findOne({ _id: new ObjectId(userId) })
     .then((user) => user || null);
 }
 
@@ -91,6 +113,7 @@ export async function insertUser(
     name,
     username,
     bio,
+    role_id: 'USER' // TODO
   };
   const password = await bcrypt.hash(originalPassword, 10);
   const { insertedId } = await db
@@ -130,4 +153,24 @@ export function dbProjectionUsers(prefix = '') {
     [`${prefix}email`]: 0,
     [`${prefix}emailVerified`]: 0,
   };
+}
+
+export async function deleteUser(db, { id }) {
+  const res = await db.collection('users').deleteOne({ _id: new ObjectId(id) });
+  return res;
+}
+
+export async function putUser(db, { id, role_id }) {
+  const newPost = {};
+
+  if (role_id) {
+    newPost.role_id = role_id;
+  }
+
+  const newValues = {
+    $set: newPost
+  };
+
+  const res = await db.collection('users').updateOne({ _id: new ObjectId(id) }, newValues);
+  return res ? newPost : res;
 }

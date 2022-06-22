@@ -33,8 +33,8 @@ const PostList = ({
   const posts = data
     ? data.reduce((acc, val) => [...acc, ...val.posts], [])
     : [];
-  const isDelete = checkPermission(user, PERMISSION.POST.POST_DELETE);
-  const isEdit = checkPermission(user, PERMISSION.POST.POST_EDIT);
+  const isDelete = checkPermission(user, PERMISSION.POST_DELETE);
+  const isEdit = checkPermission(user, PERMISSION.POST_EDIT);
 
   return (
     <div className={styles.root}>

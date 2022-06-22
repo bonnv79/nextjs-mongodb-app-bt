@@ -11,8 +11,8 @@ import styles from './UserPost.module.css';
 
 export const UserPost = ({ post = {} }) => {
   const { data } = useCurrentUser();
-  const isEdit = checkPermission(data, PERMISSION.POST.POST_EDIT);
-  const isDelete = checkPermission(data, PERMISSION.POST.POST_DELETE);
+  const isEdit = checkPermission(data, PERMISSION.POST_EDIT);
+  const isDelete = checkPermission(data, PERMISSION.POST_DELETE);
   const ownerPost = post?.creatorId === data?.user?._id;
 
   return (

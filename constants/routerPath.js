@@ -5,6 +5,8 @@ export const ROUTER_PATH = {
   NEWS: '/news',
   SETTING: '/settings',
   SIGN_UP: '/sign-up',
+  PERMISSION: '/permission',
+  USER_MANAGER: '/user-manager',
 };
 
 export const BREADCRUMB_ROUTES = {
@@ -30,6 +32,26 @@ export const BREADCRUMB_ROUTES = {
     {
       path: 'post-detail',
       breadcrumbName: 'Post Detail',
+    }
+  ],
+  PERMISSION: [
+    {
+      path: ROUTER_PATH.HOME,
+      breadcrumbName: 'Home',
+    },
+    {
+      path: ROUTER_PATH.PERMISSION,
+      breadcrumbName: 'Permission',
+    }
+  ],
+  USER_MANAGER: [
+    {
+      path: ROUTER_PATH.HOME,
+      breadcrumbName: 'Home',
+    },
+    {
+      path: ROUTER_PATH.USER_MANAGER,
+      breadcrumbName: 'User Manager',
     }
   ],
 }
