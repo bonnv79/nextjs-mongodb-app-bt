@@ -3,9 +3,10 @@ import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import { Button, Select, Tag } from "antd";
 import { useState } from "react";
 import toast from "react-hot-toast";
+
 const { Option } = Select;
 
-export const UserGroupColumn = ({ data, record, isEdit, mutate, permissionData }) => {
+const UserGroup = ({ data, record, isEdit, mutate, permissionData }) => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(data);
   const [open, setOpen] = useState(false);
@@ -93,3 +94,5 @@ export const UserGroupColumn = ({ data, record, isEdit, mutate, permissionData }
     </span>
   );
 };
+
+export default UserGroup;

@@ -5,7 +5,7 @@ import { Text } from '@/components/Text';
 import { usePostPages } from '@/lib/post';
 import { PERMISSION } from 'constants/permission';
 import Link from 'next/link';
-import { checkPermission } from 'utils';
+import { checkPermission, parseDataPage } from 'utils';
 import styles from './PostList.module.css';
 
 const initGetPath = (post) => (`/user/${post?.creator?.username}/post/${post?._id}`);
@@ -30,9 +30,7 @@ const PostList = ({
     published,
     sortDate
   });
-  const posts = data
-    ? data.reduce((acc, val) => [...acc, ...val.posts], [])
-    : [];
+  const posts = parseDataPage(data);
   const isDelete = checkPermission(user, PERMISSION.POST_DELETE);
   const isEdit = checkPermission(user, PERMISSION.POST_EDIT);
 

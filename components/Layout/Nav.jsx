@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { parseDataPage } from 'utils';
+import { Loading } from '..';
 import { Img } from '../Img';
 import Container from './Container';
 import { getMenuItems } from './MenuItems';
@@ -18,9 +20,7 @@ const { Paragraph, Text } = Typography;
 
 const UserMenu = ({ user, mutate }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd, mutate: notifyMutate } = useNotify({ userId: user._id });
-  const notifyList = data
-    ? data.reduce((acc, val) => [...acc, ...val.notify], [])
-    : [];
+  const notifyList = parseDataPage(data);
 
   const menuRef = useRef();
   const avatarRef = useRef();
@@ -146,7 +146,7 @@ const UserMenu = ({ user, mutate }) => {
           )}
         >
           <Badge count={isLoadingMore ? undefined : notifyList?.length} size="small">
-            <Button shape="circle" icon={<NotificationOutlined />} loading={isLoadingMore} />
+            <Button shape="circle" icon={<NotificationOutlined />} loading={isLoadingMore || !isReachingEnd} />
           </Badge>
         </Popover>
 
@@ -190,7 +190,30 @@ const UserMenu = ({ user, mutate }) => {
 };
 
 const Nav = () => {
-  const { data: { user } = {}, mutate } = useCurrentUser();
+  const { notAuth, user, mutate, isReachingEnd } = useCurrentUser();
+  let component = (
+    <Loading style={{ height: '100%' }} />
+  );
+
+  if (isReachingEnd) {
+    component = !notAuth ? (
+      <UserMenu user={user} mutate={mutate} />
+    ) : (
+      <>
+        <Link passHref href="/login">
+          <Button>
+            Log in
+          </Button>
+        </Link>
+        <Spacer axis="horizontal" size={0.25} />
+        <Link passHref href="/sign-up">
+          <Button type="primary">
+            Sign Up
+          </Button>
+        </Link>
+      </>
+    )
+  }
 
   return (
     <nav className={styles.nav}>
@@ -204,25 +227,7 @@ const Nav = () => {
             <a className={styles.logo}>Next.js MongoDB App</a>
           </Link>
           <Container>
-            {user ? (
-              <>
-                <UserMenu user={user} mutate={mutate} />
-              </>
-            ) : (
-              <>
-                <Link passHref href="/login">
-                  <Button>
-                    Log in
-                  </Button>
-                </Link>
-                <Spacer axis="horizontal" size={0.25} />
-                <Link passHref href="/sign-up">
-                  <Button type="primary">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
+            {component}
           </Container>
         </Container>
       </Wrapper>

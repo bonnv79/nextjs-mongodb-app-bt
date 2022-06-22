@@ -1,6 +1,7 @@
 import { ROUTER_PATH } from 'constants/routerPath';
 import Link from 'next/link';
 import { Button, Result as AntResult } from 'antd';
+import { Loading } from '..';
 
 const CODES = {
   403: {
@@ -20,7 +21,14 @@ const CODES = {
   }
 }
 
-export const Result = ({ code, ...props }) => {
+export const Result = ({ code, loading, ...props }) => {
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
+
   return (
     <AntResult
       extra={(

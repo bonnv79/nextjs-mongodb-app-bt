@@ -1,4 +1,4 @@
-import { BookOutlined, LogoutOutlined, ProfileOutlined, SettingOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { BookOutlined, LogoutOutlined, ProfileOutlined, SettingOutlined, UserAddOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { PERMISSION } from "constants/permission";
 import { ROUTER_PATH } from "constants/routerPath";
 import Link from "next/link";
@@ -50,7 +50,7 @@ export const getMenuItems = ({ user }) => {
           <a>User Manager</a>
         </Link>
       ),
-      icon: <UsergroupAddOutlined />,
+      icon: <UserAddOutlined />,
       permission: PERMISSION.USER_MANAGER_VIEW,
     },
     {

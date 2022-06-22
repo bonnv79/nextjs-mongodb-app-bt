@@ -38,7 +38,7 @@ handler.get(async (req, res) => {
     req.query.sortDate,
   );
 
-  res.json({ posts });
+  res.json({ data: posts });
 });
 
 handler.post(

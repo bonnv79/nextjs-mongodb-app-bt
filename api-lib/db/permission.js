@@ -20,7 +20,7 @@ export async function findPermission(db, limit, searchKey) {
         },
       },
       { $sort: { _id: -1 } },
-      // { $limit: limit },
+      { $limit: limit },
     ])
     .toArray();
 }

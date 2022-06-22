@@ -36,3 +36,7 @@
 ##### Release date: 21/6/2022
 - new-feature: Add Permission page
 - new-feature: Add User Manager page
+
+##### Release date: 22/6/2022
+- improvement: format code for Permission and User Manager page
+- improvement: format hook code

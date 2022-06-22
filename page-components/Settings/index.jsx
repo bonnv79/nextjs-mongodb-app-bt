@@ -203,28 +203,28 @@ const AboutYou = ({ user, mutate }) => {
 };
 
 export const Settings = () => {
-  const { data, error, mutate } = useCurrentUser();
+  const { data, error, mutate, isReachingEnd, notAuth, user } = useCurrentUser();
   const router = useRouter();
 
   useEffect(() => {
     if (!data && !error) return;
-    if (!data.user) {
+    if (notAuth) {
       router.replace('/login');
     }
   }, [router, data, error]);
 
-  if (!data?.user) {
-    return <Result code={403} />
+  if (notAuth) {
+    return <Result code={403} loading={!isReachingEnd} />
   }
 
   return (
     <Wrapper className={styles.wrapper}>
       <Spacer size={2} axis="vertical" />
-      {data?.user ? (
+      {user ? (
         <>
-          <EmailVerify user={data.user} />
-          <AboutYou user={data.user} mutate={mutate} />
-          <Auth user={data.user} />
+          <EmailVerify user={user} />
+          <AboutYou user={user} mutate={mutate} />
+          <Auth user={user} />
         </>
       ) : null}
     </Wrapper>

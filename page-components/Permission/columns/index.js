@@ -1,6 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { Popconfirm, Space } from 'antd';
-import { RoleColumn } from './RoleColumn';
+import Roles from './Roles';
 
 export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { } }) => {
   const columns = [
@@ -16,7 +16,7 @@ export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { } }) =>
       render: (roles, record) => {
         const data = Object.keys(roles);
         return (
-          <RoleColumn key={record._id} record={record} data={data} isEdit={isEdit} />
+          <Roles key={record._id} record={record} data={data} isEdit={isEdit} />
         )
       },
     },

@@ -15,7 +15,7 @@ handler.get(async (req, res) => {
     req.query.searchKey,
   );
 
-  res.json({ permission });
+  res.json({ data: permission });
 });
 
 handler.post(

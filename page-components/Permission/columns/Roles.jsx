@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { arrayEquals } from "utils/array";
 const { Option } = Select;
 
-export const RoleColumn = ({ data, record, isEdit }) => {
+const Roles = ({ data, record, isEdit }) => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(data);
   const [open, setOpen] = useState(false);
@@ -107,3 +107,5 @@ export const RoleColumn = ({ data, record, isEdit }) => {
     </span>
   );
 };
+
+export default Roles;

@@ -5,15 +5,14 @@ import { Post } from '@/components/Post';
 import { Text } from '@/components/Text';
 import { usePostPages } from '@/lib/post';
 import Link from 'next/link';
+import { parseDataPage } from 'utils';
 import styles from './UserPosts.module.css';
 
 const UserPosts = ({ user }) => {
   const { data, size, setSize, isLoadingMore, isReachingEnd } = usePostPages({
     creatorId: user._id, published: true
   });
-  const posts = data
-    ? data.reduce((acc, val) => [...acc, ...val.posts], [])
-    : [];
+  const posts = parseDataPage(data);
 
   return (
     <div className={styles.root}>
