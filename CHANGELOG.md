@@ -41,3 +41,4 @@
 - improvement: format code for Permission and User Manager page
 - improvement: format hook code
 - improvement: increase the performance of checking permission
+- fix-bug: do not show create post button
