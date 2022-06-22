@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Popconfirm, Space, Typography } from 'antd';
-import { UserGroupColumn } from './UserGroupColumn';
+import UserGroup from './UserGroup';
 
 const { Text } = Typography;
 
@@ -41,7 +41,7 @@ export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { }, muta
       align: 'center',
       render: (value, record) => {
         return (
-          <UserGroupColumn data={value} record={record} isEdit={isEdit} mutate={mutate} permissionData={permissionData} />
+          <UserGroup data={value} record={record} isEdit={isEdit} mutate={mutate} permissionData={permissionData} />
         )
       }
     },

@@ -5,12 +5,12 @@ import { useCurrentUser } from '@/lib/user';
 import { checkPermission } from 'utils';
 import { PERMISSION } from 'constants/permission';
 import { useState } from 'react';
-import UserManagerTable from './UserManagerTable';
+import DataTable from './DataTable';
 import { Button, Modal } from 'antd';
 import Creater from './Creater';
 
 export const UserManager = () => {
-  const { data } = useCurrentUser();
+  const { user, isReachingEnd } = useCurrentUser();
   const [searchKey, setSearchKey] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -22,13 +22,13 @@ export const UserManager = () => {
     setIsModalVisible(false);
   };
 
-  if (!checkPermission(data, PERMISSION.USER_MANAGER_VIEW)) {
-    return <Result code={403} />
+  if (!checkPermission(user, PERMISSION.USER_MANAGER_VIEW)) {
+    return <Result code={403} loading={!isReachingEnd} />
   }
 
-  const isCreate = checkPermission(data, PERMISSION.USER_MANAGER_CREATE);
-  const isEdit = checkPermission(data, PERMISSION.USER_MANAGER_EDIT);
-  const isDelete = checkPermission(data, PERMISSION.USER_MANAGER_DELETE);
+  const isCreate = checkPermission(user, PERMISSION.USER_MANAGER_CREATE);
+  const isEdit = checkPermission(user, PERMISSION.USER_MANAGER_EDIT);
+  const isDelete = checkPermission(user, PERMISSION.USER_MANAGER_DELETE);
   const props = { isCreate, isEdit, isDelete, searchKey };
 
   return (
@@ -43,7 +43,7 @@ export const UserManager = () => {
         isCreate && <Button key="create" type="primary" onClick={showModal}>Create</Button>
       ]}
     >
-      <UserManagerTable {...props} />
+      <DataTable {...props} />
 
       {isCreate && (
         <Modal

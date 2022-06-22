@@ -4,21 +4,21 @@ import { useUsers } from '@/lib/user';
 import { Spin, Table } from 'antd';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { parseDataPage } from 'utils';
 import { renderColumns } from './columns';
 
-const UserManagerTable = ({ isEdit, isDelete, searchKey }) => {
+const DataTable = ({ isEdit, isDelete, searchKey }) => {
   const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   let { data: permissionData } = usePermissionPages();
-  permissionData = permissionData
-    ? permissionData.reduce((acc, val) => [...acc, ...val.permission], [])
-    : [];
+  permissionData = parseDataPage(permissionData);
 
-  const { data, mutate } = useUsers({ page: current - 1, pageSize: pageSize, searchKey });
-  const users = data?.users?.[0]?.data;
-  const total = data?.users?.[0]?.metadata?.[0]?.total;
+  const { data, mutate, isReachingEnd } = useUsers({ page: current - 1, pageSize: pageSize, searchKey });
+  const users = parseDataPage(data);
+  const metadata = parseDataPage(data, 'metadata')?.[0] || {};
+  const { total } = metadata;
 
   const handleDelete = useCallback(
     async (id) => {
@@ -43,7 +43,7 @@ const UserManagerTable = ({ isEdit, isDelete, searchKey }) => {
   );
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={loading || !isReachingEnd}>
       <Table
         rowKey="_id"
         columns={renderColumns({ isEdit, isDelete, handleDelete, mutate, permissionData })}
@@ -63,4 +63,4 @@ const UserManagerTable = ({ isEdit, isDelete, searchKey }) => {
   )
 };
 
-export default UserManagerTable;
+export default DataTable;

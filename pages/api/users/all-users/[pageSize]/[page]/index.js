@@ -17,7 +17,7 @@ handler.get(async (req, res) => {
     pageSize: Number(req.query.pageSize),
   });
 
-  res.json({ users });
+  res.json(users);
 });
 
 export default handler;

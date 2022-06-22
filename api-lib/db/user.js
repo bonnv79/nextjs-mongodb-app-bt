@@ -61,7 +61,7 @@ export async function findUsers(db, { page, pageSize, searchKey }) {
       { $project: { password: 0 } },
       {
         $facet: {
-          metadata: [{ $count: "total" }, { $addFields: { page } }],
+          metadata: [{ $count: "total" }, { $addFields: { page, pageSize } }],
           data: [{ $skip: page * pageSize }, { $limit: pageSize }]
         }
       }

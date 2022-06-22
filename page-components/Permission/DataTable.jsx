@@ -3,14 +3,13 @@ import { usePermissionPages } from '@/lib/permission';
 import { Spin, Table } from 'antd';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { parseDataPage } from 'utils';
 import { renderColumns } from './columns';
 
-const PermissionRoles = ({ isEdit, isDelete, searchKey }) => {
+const DataTable = ({ isEdit, isDelete, searchKey }) => {
   const [loading, setLoading] = useState(false);
-  const { data, mutate } = usePermissionPages({ searchKey });
-  let permissionData = data
-    ? data.reduce((acc, val) => [...acc, ...val.permission], [])
-    : [];
+  const { data, mutate, isReachingEnd } = usePermissionPages({ searchKey });
+  let permissionData = parseDataPage(data);
 
   const handleDelete = useCallback(
     async (id) => {
@@ -33,7 +32,7 @@ const PermissionRoles = ({ isEdit, isDelete, searchKey }) => {
   );
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={loading || !isReachingEnd}>
       <Table
         rowKey="_id"
         columns={renderColumns({ isEdit, isDelete, handleDelete })}
@@ -44,4 +43,4 @@ const PermissionRoles = ({ isEdit, isDelete, searchKey }) => {
   )
 };
 
-export default PermissionRoles;
+export default DataTable;

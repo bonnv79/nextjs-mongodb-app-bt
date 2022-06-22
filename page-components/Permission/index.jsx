@@ -1,6 +1,5 @@
 import { PageHeader } from '@/components/PageHeader';
 import { BREADCRUMB_ROUTES } from 'constants/routerPath';
-import PermissionRoles from './PermissionRoles';
 import { Result } from '@/components/Result';
 import { useCurrentUser } from '@/lib/user';
 import { checkPermission } from 'utils';
@@ -8,9 +7,10 @@ import { PERMISSION } from 'constants/permission';
 import Creater from './Creater';
 import { Button, Modal } from 'antd';
 import { useState } from 'react';
+import DataTable from './DataTable';
 
 export const Permission = () => {
-  const { data } = useCurrentUser();
+  const { user, isReachingEnd } = useCurrentUser();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchKey, setSearchKey] = useState('');
 
@@ -22,13 +22,13 @@ export const Permission = () => {
     setIsModalVisible(false);
   };
 
-  if (!checkPermission(data, PERMISSION.PERMISSION_VIEW)) {
-    return <Result code={403} />
+  if (!checkPermission(user, PERMISSION.PERMISSION_VIEW)) {
+    return <Result code={403} loading={!isReachingEnd} />
   }
 
-  const isCreate = checkPermission(data, PERMISSION.PERMISSION_CREATE);
-  const isEdit = checkPermission(data, PERMISSION.PERMISSION_EDIT);
-  const isDelete = checkPermission(data, PERMISSION.PERMISSION_DELETE);
+  const isCreate = checkPermission(user, PERMISSION.PERMISSION_CREATE);
+  const isEdit = checkPermission(user, PERMISSION.PERMISSION_EDIT);
+  const isDelete = checkPermission(user, PERMISSION.PERMISSION_DELETE);
   const props = { isCreate, isEdit, isDelete, searchKey };
 
   return (
@@ -43,7 +43,7 @@ export const Permission = () => {
       searchKey={searchKey}
       onSearch={setSearchKey}
     >
-      <PermissionRoles {...props} />
+      <DataTable {...props} />
 
       {isCreate && (
         <Modal
