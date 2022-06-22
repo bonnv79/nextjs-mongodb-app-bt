@@ -22,7 +22,7 @@ handler.get(async (req, res) => {
     req.query.limit ? parseInt(req.query.limit, 10) : undefined
   );
 
-  return res.json({ notify });
+  return res.json({ data: notify });
 });
 
 export default handler;

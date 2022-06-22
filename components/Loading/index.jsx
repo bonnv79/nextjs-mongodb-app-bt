@@ -1,11 +1,11 @@
 import { Spin } from 'antd';
 import styles from './styles.module.scss';
 
-const Loading = ({ ...props }) => {
+const Loading = ({ style, ...props }) => {
 
   return (
     <Spin style={{ maxHeight: '100%' }} {...props}>
-      <div className={styles.content} />
+      <div style={style} className={styles.content} />
     </Spin>
   );
 };
