@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { checkPermission } from 'utils';
 import Poster from './Poster';
 import { PostList } from '@/components/PostList';
+import { usePermissionByRoleId } from '@/lib/permission';
 
 export const Post = () => {
   const [open, setOpen] = useState(false);
@@ -16,10 +17,11 @@ export const Post = () => {
   const [sortDate, setSortDate] = useState(-1);
   const [published, setPublished] = useState(undefined);
   const [owner, setOwner] = useState(false);
-  const { data, error } = useCurrentUser();
+  const { data, user, error, notAuth } = useCurrentUser();
+  const { roles } = usePermissionByRoleId(user?.role_id);
 
-  const authen = Boolean(data?.user);
-  const isCreate = checkPermission(data, PERMISSION.POST_CREATE);
+  const authen = !notAuth;
+  const isCreate = checkPermission(roles, PERMISSION.POST_CREATE);
 
   const onChange = () => {
     setOpen(!open);
@@ -62,7 +64,7 @@ export const Post = () => {
         </>
       )}
       <PostList
-        user={data?.user}
+        user={user}
         searchKey={searchKey}
         published={authen ? published : true}
         sortDate={sortDate}
