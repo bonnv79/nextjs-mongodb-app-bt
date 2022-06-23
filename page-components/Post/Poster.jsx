@@ -6,8 +6,8 @@ import { PosterInner } from '@/components/PosterInner';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 
-const Poster = ({ data, error, isCreate }) => {
-  const loading = !data && !error;
+const Poster = ({ user, error, isCreate, mutate }) => {
+  const loading = !user && !error;
 
   return isCreate && (
     <div className={styles.root}>
@@ -15,16 +15,16 @@ const Poster = ({ data, error, isCreate }) => {
         <Avatar
           style={{ marginRight: 8 }}
           size={40}
-          alt={data?.user?.username}
-          src={data?.user?.profilePicture}
+          alt={user?.username}
+          src={user?.profilePicture}
           icon={<UserOutlined />}
         />
-        {data?.user ? `What's on your post, ${data?.user.name}?` : 'Share your posts'}
+        {user ? `What's on your post, ${user.name}?` : 'Share your posts'}
       </h3>
       {loading ? (
         <LoadingDots>Loading</LoadingDots>
-      ) : data?.user ? (
-        <PosterInner user={data.user} />
+      ) : user ? (
+        <PosterInner user={user} mutate={mutate} />
       ) : (
         <Text color="secondary">
           Please{' '}

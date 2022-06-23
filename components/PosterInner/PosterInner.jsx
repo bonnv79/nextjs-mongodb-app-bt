@@ -1,7 +1,6 @@
 import { Avatar, Button, Form, Input, Space } from 'antd';
 import toast from 'react-hot-toast';
 import { useState, useCallback, useRef } from 'react';
-import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import { Editor } from '@/components/Editor';
 import styles from './PosterInner.module.scss';
@@ -9,15 +8,13 @@ import { DEFAULT_UPLOAD } from 'constants';
 
 const { TextArea } = Input;
 
-const PosterInner = ({ user = {}, post = {}, save, cancel = () => { } }) => {
+const PosterInner = ({ user = {}, post = {}, save, cancel = () => { }, mutate = () => { } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [content, setContent] = useState(post.content || undefined);
   const [form] = Form.useForm();
   const editMode = post._id;
   const profilePictureRef = useRef();
   const [avatarHref, setAvatarHref] = useState(post.img);
-
-  const { mutate } = usePostPages();
 
   const onFinish = useCallback(
     async (values) => {

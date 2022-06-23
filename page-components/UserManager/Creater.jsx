@@ -4,28 +4,30 @@ import { Button, Form, Input, Space, Spin } from 'antd';
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-const Creater = () => {
+const Creater = ({ resetPagination }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { mutate } = useUsers();
 
   const onReset = () => {
     form.resetFields();
+    resetPagination();
   };
 
   const onFinish = useCallback(
     async (values) => {
       try {
         setLoading(true);
+        const { email, name, password } = values || {};
 
         await fetcher('/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: values?.email,
-            name: values?.name,
-            password: values?.password,
-            username: values?.email?.split('@')?.[0],
+            email: email?.trim(),
+            name: name?.trim(),
+            password: password,
+            username: email?.split('@')?.[0],
             create: true
           }),
         });
@@ -78,7 +80,7 @@ const Creater = () => {
         </Form.Item>
 
         <Form.Item
-          label="password"
+          label="Password"
           name="password"
           rules={[
             {

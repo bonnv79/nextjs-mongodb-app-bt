@@ -48,7 +48,7 @@ const Creater = () => {
         form={form}
       >
         <Form.Item
-          label="User group name"
+          label="User Group"
           name="role_id"
           rules={[
             {

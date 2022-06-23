@@ -1,10 +1,31 @@
-import { findPostById } from '@/api-lib/db';
 import { database } from '@/api-lib/middlewares';
+import { usePostById } from '@/lib/post';
 import { UserPost } from '@/page-components/UserPost';
 import nc from 'next-connect';
 import Head from 'next/head';
+import { Result } from '@/components/Result';
+import { ROUTER_PATH } from 'constants/routerPath';
+import { useRouter } from 'next/router';
 
-export default function UserPostPage({ post }) {
+export default function UserPostPage({ postId, username }) {
+  const { post, isReachingEnd, notExists } = usePostById(postId);
+  const router = useRouter();
+
+  if (!notExists && username !== post?.creator?.username) {
+    router.push(`/user/${post?.creator?.username}/post/${post._id}`);
+  }
+
+  if (notExists) {
+    return (
+      <Result
+        code={404}
+        loading={!isReachingEnd}
+        href={ROUTER_PATH.POST}
+        label="Back Post Page"
+      />
+    )
+  }
+
   if (typeof post.createdAt !== 'string') {
     post.createdAt = new Date(post.createdAt);
   }
@@ -16,7 +37,7 @@ export default function UserPostPage({ post }) {
           Post Detail
         </title>
       </Head>
-      <UserPost post={post} />
+      {post?._id && <UserPost post={post} />}
     </>
   );
 }
@@ -24,28 +45,10 @@ export default function UserPostPage({ post }) {
 export async function getServerSideProps(context) {
   await nc().use(database).run(context.req, context.res);
 
-  const post = await findPostById(context.req.db, context.params.postId);
-
-  if (!post) {
-    return {
-      notFound: true,
-    };
-  }
-
-  if (context.params.username !== post.creator.username) {
-    // mismatch params in url, redirect to correct one
-    // eg. post x belongs to user a, but url is /user/b/post/x
-    return {
-      redirect: {
-        destination: `/user/${post.creator.username}/post/${post._id}`,
-        permanent: false,
-      },
-    };
-  }
-  post._id = String(post._id);
-  post.creatorId = String(post.creatorId);
-  post.creator._id = String(post.creator._id);
-  post.createdAt = post.createdAt.toJSON();
-  post.updateAt = post.updateAt.toJSON();
-  return { props: { post } };
+  return {
+    props: {
+      postId: context.params.postId,
+      username: context.params.username
+    }
+  };
 }

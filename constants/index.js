@@ -14,4 +14,9 @@ export const IMG_CONFIG = {
   crop: 'fill',
 }
 
+export const DEFAULT_PAGINATION = {
+  current: 1,
+  pageSize: 10
+}
+
 export default {};
