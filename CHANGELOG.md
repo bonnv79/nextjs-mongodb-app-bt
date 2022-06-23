@@ -48,3 +48,4 @@
 - improvement: performance improvement
 - improvement: modify a few UI
 - fix-bug: fix build failed
+- fix-bug: fix css for editor

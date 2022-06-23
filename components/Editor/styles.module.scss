@@ -17,8 +17,16 @@
       border-radius: 0 0 5px 5px;
     }
 
-    .ql-editor>* {
-      color: var(--foreground);
+    .ql-editor {
+      &>* {
+        color: var(--foreground);
+      }
+
+      .ql-video {
+        width: 100%;
+        min-height: 300px;
+        height: 60vh;
+      }
     }
   }
 }
