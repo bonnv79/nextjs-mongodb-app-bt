@@ -110,7 +110,7 @@ const PosterInner = ({ user = {}, post = {}, save, cancel = () => { }, mutate = 
           rules={[{ required: true, message: 'Please input post\'s title!' }]}
           initialValue={post.title}
         >
-          <TextArea className={styles.title} rows={2} placeholder={`What's on your post title, ${user.name}?`} />
+          <TextArea className={styles.title} rows={1} placeholder={`What's on your post title, ${user.name}?`} />
         </Form.Item>
       </Space>
 

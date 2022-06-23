@@ -1,8 +1,7 @@
-import { Spacer } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { useCurrentUser } from '@/lib/user';
 import { FileAddOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { PERMISSION } from 'constants/permission';
 import { BREADCRUMB_ROUTES } from 'constants/routerPath';
 import { useState } from 'react';
@@ -31,8 +30,12 @@ export const Post = () => {
     sortDate
   });
 
-  const onChange = () => {
-    setOpen(!open);
+  const onOpen = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
   };
 
   const extra = [(
@@ -47,7 +50,7 @@ export const Post = () => {
     extra.push(
       <Button
         key="create-form"
-        onClick={onChange}
+        onClick={onOpen}
         type="primary"
         icon={<FileAddOutlined />}
       >
@@ -71,17 +74,22 @@ export const Post = () => {
       owner={owner}
       setOwner={authen && setOwner}
     >
-      {searchKey}
-      {open && (
-        <>
-          <Poster user={user} error={error} isCreate={isCreate} mutate={usePostData?.mutate} />
-          <Spacer axis="vertical" size={1} />
-        </>
-      )}
       <PostList
         user={user}
         usePostData={usePostData}
       />
+
+      {isCreate && (
+        <Modal
+          title="Create Post"
+          visible={open}
+          onCancel={onClose}
+          footer={null}
+          width={1280}
+        >
+          <Poster user={user} error={error} isCreate={isCreate} mutate={usePostData?.mutate} />
+        </Modal>
+      )}
     </PageHeader>
   );
 };
