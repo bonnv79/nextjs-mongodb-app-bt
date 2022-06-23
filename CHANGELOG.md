@@ -47,3 +47,4 @@
 - fix-bug: fixed a few minor bugs
 - improvement: performance improvement
 - improvement: modify a few UI
+- fix-bug: fix build failed

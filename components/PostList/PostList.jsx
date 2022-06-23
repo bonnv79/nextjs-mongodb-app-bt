@@ -3,7 +3,6 @@ import { Container } from '@/components/Layout';
 import { Post } from '@/components/Post';
 import { Text } from '@/components/Text';
 import { usePermissionByRoleId } from '@/lib/permission';
-import { usePostPages } from '@/lib/post';
 import { Spin } from 'antd';
 import { PERMISSION } from 'constants/permission';
 import Link from 'next/link';
