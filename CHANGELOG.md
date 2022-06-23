@@ -42,3 +42,9 @@
 - improvement: format hook code
 - improvement: increase the performance of checking permission
 - fix-bug: do not show create post button
+
+##### Release date: 23/6/2022
+- fix-bug: fixed a few minor bugs
+- improvement: performance improvement
+- improvement: modify a few UI
+- fix-bug: fix build failed

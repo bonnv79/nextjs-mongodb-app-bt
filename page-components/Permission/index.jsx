@@ -49,7 +49,7 @@ export const Permission = () => {
 
       {isCreate && (
         <Modal
-          title="Create user group"
+          title="Create User Group"
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleOk}

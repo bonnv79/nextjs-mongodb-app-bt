@@ -4,6 +4,7 @@ import { Spacer } from '@/components/Layout';
 import { PageHeader } from '@/components/PageHeader';
 import { Post } from '@/components/Post';
 import { usePermissionByRoleId } from '@/lib/permission';
+import { usePostPages } from '@/lib/post';
 import { useCurrentUser } from '@/lib/user';
 import { PERMISSION } from 'constants/permission';
 import { BREADCRUMB_ROUTES } from 'constants/routerPath';
@@ -13,6 +14,7 @@ import styles from './UserPost.module.css';
 export const UserPost = ({ post = {} }) => {
   const { user } = useCurrentUser();
   const { roles } = usePermissionByRoleId(user?.role_id);
+  const { mutate } = usePostPages();
 
   const isEdit = checkPermission(roles, PERMISSION.POST_EDIT);
   const isDelete = checkPermission(roles, PERMISSION.POST_DELETE);
@@ -25,7 +27,7 @@ export const UserPost = ({ post = {} }) => {
       }}
       avatar={undefined}
     >
-      <Post post={post} isEdit={isEdit || ownerPost} isPublished={isEdit} detailMode />
+      <Post post={post} isEdit={isEdit || ownerPost} isPublished={isEdit} detailMode mutate={mutate} />
       <Spacer axis="vertical" size={1} />
 
       <h3 className={styles.subtitle}>Comments</h3>

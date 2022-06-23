@@ -5,7 +5,7 @@ import Roles from './Roles';
 export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { } }) => {
   const columns = [
     {
-      title: 'User group name',
+      title: 'User Group',
       dataIndex: 'role_id',
       key: 'role_id',
     },

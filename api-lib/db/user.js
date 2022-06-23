@@ -53,7 +53,11 @@ export async function findUsers(db, { page, pageSize, searchKey }) {
     .aggregate([
       {
         $match: {
-          ...(searchKey && { role_id: { '$regex': searchKey, '$options': 'i' } }),
+          $or: [
+            { name: { '$regex': searchKey, '$options': 'i' } },
+            { username: { '$regex': searchKey, '$options': 'i' } },
+            { email: { '$regex': searchKey, '$options': 'i' } },
+          ]
         },
       },
       { $sort: { _id: -1 } },

@@ -1,5 +1,5 @@
-import { CheckOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Popconfirm, Space, Typography } from 'antd';
+import { CheckOutlined, CloseOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Popconfirm, Space, Typography } from 'antd';
 import UserGroup from './UserGroup';
 
 const { Text } = Typography;
@@ -10,6 +10,18 @@ export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { }, muta
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      render: (value, record) => {
+        return (
+          <Space>
+            <Avatar
+              src={record?.profilePicture}
+              alt={record?.username}
+              icon={<UserOutlined />}
+            />
+            <span>{value}</span>
+          </Space>
+        )
+      },
     },
     {
       title: 'User Name',
@@ -35,7 +47,7 @@ export const renderColumns = ({ isEdit, isDelete, handleDelete = () => { }, muta
       },
     },
     {
-      title: 'User Group Name',
+      title: 'User Group',
       dataIndex: 'role_id',
       key: 'role_id',
       align: 'center',

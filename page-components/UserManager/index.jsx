@@ -9,12 +9,14 @@ import DataTable from './DataTable';
 import { Button, Modal } from 'antd';
 import Creater from './Creater';
 import { usePermissionByRoleId } from '@/lib/permission';
+import { DEFAULT_PAGINATION } from 'constants';
 
 export const UserManager = () => {
   const { user, isReachingEnd } = useCurrentUser();
   const { roles, isReachingEnd: isReachingEndPer } = usePermissionByRoleId(user?.role_id);
   const [searchKey, setSearchKey] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -31,7 +33,23 @@ export const UserManager = () => {
   const isCreate = checkPermission(roles, PERMISSION.USER_MANAGER_CREATE);
   const isEdit = checkPermission(roles, PERMISSION.USER_MANAGER_EDIT);
   const isDelete = checkPermission(roles, PERMISSION.USER_MANAGER_DELETE);
-  const props = { isCreate, isEdit, isDelete, searchKey };
+  const tableProps = {
+    isCreate,
+    isEdit,
+    isDelete,
+    searchKey,
+    pagination,
+    setPagination
+  };
+
+  const resetPagination = () => {
+    setPagination(DEFAULT_PAGINATION);
+  }
+
+  const handleSearch = (val) => {
+    setSearchKey(val);
+    resetPagination();
+  }
 
   return (
     <PageHeader
@@ -39,13 +57,13 @@ export const UserManager = () => {
       breadcrumb={{
         routes: BREADCRUMB_ROUTES.USER_MANAGER
       }}
-      // searchKey={searchKey}
-      // onSearch={setSearchKey}
+      searchKey={searchKey}
+      onSearch={handleSearch}
       extra={[
         isCreate && <Button key="create" type="primary" onClick={showModal}>Create</Button>
       ]}
     >
-      <DataTable {...props} />
+      <DataTable {...tableProps} />
 
       {isCreate && (
         <Modal
@@ -55,7 +73,7 @@ export const UserManager = () => {
           onCancel={handleOk}
           footer={null}
         >
-          <Creater />
+          <Creater resetPagination={resetPagination} />
         </Modal>
       )}
     </PageHeader>

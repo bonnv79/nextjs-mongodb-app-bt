@@ -7,15 +7,13 @@ import toast from 'react-hot-toast';
 import { parseDataPage } from 'utils';
 import { renderColumns } from './columns';
 
-const DataTable = ({ isEdit, isDelete, searchKey }) => {
+const DataTable = ({ isEdit, isDelete, searchKey, pagination, setPagination }) => {
   const [loading, setLoading] = useState(false);
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
   let { data: permissionData } = usePermissionPages();
   permissionData = parseDataPage(permissionData);
 
-  const { data, mutate, isReachingEnd } = useUsers({ page: current - 1, pageSize: pageSize, searchKey });
+  const { data, mutate, isReachingEnd } = useUsers({ page: pagination?.current, pageSize: pagination?.pageSize, searchKey });
   const users = parseDataPage(data);
   const metadata = parseDataPage(data, 'metadata')?.[0] || {};
   const { total } = metadata;
@@ -50,13 +48,12 @@ const DataTable = ({ isEdit, isDelete, searchKey }) => {
         dataSource={users}
         size="small"
         pagination={{
-          current,
-          pageSize,
+          current: pagination?.current,
+          pageSize: pagination?.pageSize,
           total,
         }}
         onChange={(newPagination) => {
-          setCurrent(newPagination?.current);
-          // setPageSize(newPagination?.pageSize);
+          setPagination(newPagination);
         }}
       />
     </Spin>

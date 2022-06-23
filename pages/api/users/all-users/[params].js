@@ -11,10 +11,13 @@ handler.get(async (req, res) => {
   if (!req.user) {
     return res.json({ users: null })
   };
+  const { params } = req.query;
+  const requestBody = JSON.parse(params);
 
   const users = await findUsers(req.db, {
-    page: Number(req.query.page),
-    pageSize: Number(req.query.pageSize),
+    page: Number(requestBody?.page),
+    pageSize: Number(requestBody?.pageSize),
+    searchKey: requestBody?.searchKey,
   });
 
   res.json(users);

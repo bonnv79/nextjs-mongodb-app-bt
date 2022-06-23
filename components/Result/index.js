@@ -21,7 +21,7 @@ const CODES = {
   }
 }
 
-export const Result = ({ code, loading, ...props }) => {
+export const Result = ({ code, loading, href = ROUTER_PATH.HOME, label = 'Back Home', ...props }) => {
 
   if (loading) {
     return (
@@ -32,8 +32,8 @@ export const Result = ({ code, loading, ...props }) => {
   return (
     <AntResult
       extra={(
-        <Link href={ROUTER_PATH.HOME} passHref>
-          <Button type="primary">Back Home</Button>
+        <Link href={href} passHref>
+          <Button type="primary">{label}</Button>
         </Link>
       )}
       {...CODES[code]}

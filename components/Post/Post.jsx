@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import styles from './Post.module.css';
 import { CheckCircleOutlined, CloseOutlined, EditOutlined, StopOutlined, UserOutlined } from '@ant-design/icons';
-import { usePostPages } from '@/lib/post';
 import { fetcher } from '@/lib/fetch';
 import toast from 'react-hot-toast';
 import { Button, Col, Popconfirm, Row, Space, Spin, Tooltip, Typography, Avatar } from 'antd';
@@ -23,12 +22,12 @@ const Post = ({
   isPublished = false,
   isEdit = false,
   detailMode = false,
-  hideTitle = false
+  hideTitle = false,
+  mutate = () => { }
 }) => {
   const [post, setPost] = useState(initPost);
   const [isLoading, setIsLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const { mutate } = usePostPages();
 
   const timestampTxt = getTimestamp(post.createdAt);
 
@@ -155,7 +154,7 @@ const Post = ({
 
         {
           editMode ? (
-            <PosterInner post={post} save={handleSave} cancel={() => setEditMode(false)} />
+            <PosterInner post={post} save={handleSave} cancel={() => setEditMode(false)} mutate={mutate} />
           ) : (
             <Row gutter={[0, 0]}>
               {
