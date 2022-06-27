@@ -49,3 +49,6 @@
 - improvement: modify a few UI
 - fix-bug: fix build failed
 - fix-bug: fix css for editor
+
+##### Release date: 27/6/2022
+- fix-bug: fixed a few minor bugs

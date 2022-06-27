@@ -20,7 +20,7 @@ import Wrapper from './Wrapper';
 const { Paragraph, Text } = Typography;
 
 const UserMenu = ({ user, mutate }) => {
-  const { data, size, setSize, isLoadingMore, isReachingEnd, mutate: notifyMutate } = useNotify({ userId: user._id });
+  const { data, size, setSize, isLoadingMore, isReachingEnd, mutate: notifyMutate, isNotMore } = useNotify({ userId: user._id });
   const notifyList = parseDataPage(data);
   const { roles } = usePermissionByRoleId(user?.role_id);
 
@@ -133,7 +133,7 @@ const UserMenu = ({ user, mutate }) => {
                 }}
               />
               <div className={styles.loadMoreBtn}>
-                {isReachingEnd ? (
+                {isNotMore ? (
                   <Text color="secondary">No more comments are found</Text>
                 ) : (
                   <Button

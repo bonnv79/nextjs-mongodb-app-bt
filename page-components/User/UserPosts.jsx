@@ -9,7 +9,7 @@ import { parseDataPage } from 'utils';
 import styles from './UserPosts.module.css';
 
 const UserPosts = ({ user }) => {
-  const { data, size, setSize, isLoadingMore, isReachingEnd } = usePostPages({
+  const { data, size, setSize, isLoadingMore, isNotMore } = usePostPages({
     creatorId: user._id, published: true
   });
   const posts = parseDataPage(data);
@@ -29,7 +29,7 @@ const UserPosts = ({ user }) => {
           </Link>
         ))}
         <Container justifyContent="center">
-          {isReachingEnd ? (
+          {isNotMore ? (
             <Text color="secondary">No more posts are found</Text>
           ) : (
             <Button
