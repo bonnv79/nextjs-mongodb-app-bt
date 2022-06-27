@@ -22,6 +22,7 @@ const PostList = ({
     setSize,
     isLoadingMore,
     isReachingEnd,
+    isNotMore,
     mutate,
   } = usePostData;
   const { roles } = usePermissionByRoleId(user?.role_id);
@@ -51,7 +52,7 @@ const PostList = ({
           </Link>
         ))}
         <Container justifyContent="center">
-          {isReachingEnd ? (
+          {isNotMore ? (
             <Text color="secondary">No more posts are found</Text>
           ) : (
             <Button
